@@ -6,7 +6,7 @@ mkosi_rootfs='mkosi.rootfs'
 image_dir='images'
 image_mnt='mnt_image'
 date=$(date +%Y%m%d)
-image_name=pipa-fedora-${date}-1
+image_name=pipa-fedora43-${date}-1
 
 # this has to match the volume_id in installer_data.json
 ROOTFS_UUID=$(uuidgen)
@@ -29,7 +29,7 @@ mkosi_create_rootfs() {
 
 mount_image() {
     # get last modified image
-    image_path=$(find $image_dir -maxdepth 1 -type d | grep -E "/pipa-fedora-[0-9]{8}-[0-9]" | sort | tail -1)
+    image_path=$(find $image_dir -maxdepth 1 -type d | grep -E "/pipa-fedora43-[0-9]{8}-[0-9]" | sort | tail -1)
 
     [[ -z $image_path ]] && echo -n "image not found in $image_dir\nexiting..." && exit
 
@@ -106,9 +106,9 @@ make_image() {
     arch-chroot $image_mnt kernel-install add "$(basename "$kernel_path")" "${kernel_path}/vmlinuz" --verbose
 
     echo "### Enabling system services"
-    arch-chroot $image_mnt systemctl enable NetworkManager sshd systemd-resolved
-    arch-chroot $image_mnt systemctl enable qbootctl-mark-bootable bootmac-bluetooth
-    arch-chroot $image_mnt systemctl disable iio-sensor-proxy
+    arch-chroot $image_mnt systemctl enable NetworkManager.service sshd.service systemd-resolved.service
+    arch-chroot $image_mnt systemctl enable qbootctl.service bootmac-bluetooth.service tuned.service tuned-ppd.service
+    arch-chroot $image_mnt systemctl disable iio-sensor-proxy.service
 
     echo "### Disabling systemd-firstboot"
     arch-chroot $image_mnt rm -f /usr/lib/systemd/system/sysinit.target.wants/systemd-firstboot.service
@@ -119,14 +119,17 @@ make_image() {
     arch-chroot $image_mnt find /var/lib/gdm -type d -exec chmod 744 {} \;
     arch-chroot $image_mnt find /var/lib/gdm -type f -exec chmod 644 {} \;
 
-    echo "### Creating default user"
+    echo "### Creating default user and setting fish as their shell"
     arch-chroot $image_mnt useradd -m -G audio,video,wheel user
     echo 'user:147147' | arch-chroot $image_mnt chpasswd
+    arch-chroot $image_mnt chsh -s /bin/fish user
+    
+    echo "### Version-locking bluez as newest version breaks bluetooth on pipa"
+    arch-chroot $image_mnt dnf -y versionlock add bluez
 
     # echo "### SElinux labeling filesystem"
     # arch-chroot $image_mnt setfiles -F -p -c /etc/selinux/targeted/policy/policy.* -e /proc -e /sys -e /dev /etc/selinux/targeted/contexts/files/file_contexts /
     # arch-chroot $image_mnt setfiles -F -p -c /etc/selinux/targeted/policy/policy.* -e /proc -e /sys -e /dev /etc/selinux/targeted/contexts/files/file_contexts /boot
-
 
     ###### post-install cleanup ######
     echo -e '\n### Cleanup'
@@ -139,6 +142,9 @@ make_image() {
     chroot $image_mnt ln -s ../run/systemd/resolve/stub-resolv.conf /etc/resolv.conf
 
     echo -e '\n### Copying boot image'
+    echo "### Debug: /boot contents"
+    ls -lah "$image_mnt/boot"
+
     cp $image_mnt/boot/boot*.img $image_dir/$image_name/boot.img
 
     echo -e '\n### Unmounting rootfs subvolumes'
