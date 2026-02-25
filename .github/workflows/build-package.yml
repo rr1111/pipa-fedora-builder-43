@@ -4,23 +4,14 @@ permissions:
   contents: write
 
 on:
-  schedule:
-    - cron: "0 0 1 * *"
   workflow_dispatch:
-  push:
-    branches:
-      - 'main'
-    paths-ignore:
-      - '.gitignore'
-      - 'LICENSE'
-      - '*.md'
-
+  
 jobs:
   build:
     runs-on: ubuntu-24.04-arm
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - name: Build the Docker image
       run: docker build . -t 'pipa-fedora-builder'
@@ -37,7 +28,7 @@ jobs:
       uses: softprops/action-gh-release@v2
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
-        tag_name: nightly-${{ steps.date.outputs.date }}
-        name: Nightly ${{ steps.date.outputs.date }}
+        tag_name: f43-${{ steps.date.outputs.date }}
+        name: Fedora 43 ${{ steps.date.outputs.date }}
         files: images/*.zip
         draft: true
