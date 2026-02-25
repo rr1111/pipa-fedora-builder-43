@@ -39,11 +39,12 @@ fastboot reboot
 <details>
   <summary><strong>Dualboot installation (untested)</strong></summary>
 
-### Dualboot notes
 #### <strong>WARNING:</strong> 
 Even though they should work, these instructions are taken 1:1 from the Fedora 42 installation instructions and untested by me! If you have successfully set up a dualboot environment with them, please open a PR removing this warning. 
-
 ---
+
+### Dualboot notes
+
 - Repartition required
 - Recommended slots configuration: 
     - Slot A: Android
