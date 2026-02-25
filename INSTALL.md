@@ -4,7 +4,8 @@
   <summary><strong>Notes</strong></summary>
 
 - Kernel updates are handled by dnf. Updated boot image will be flashed to the active slot
-- Sensors may break after suspend, everything else should work as expected
+- Sensors may break after suspend 
+- Front camera doesnt work and even though it never did for me, the back one has been reported to work (poorly) by others though
 - Sensors are disabled by default, to enable install ```pipa-sensors``` package and enable ```iio-sensor-proxy``` and ```hexagonrpcd-sdsp``` services
 
 </details>
