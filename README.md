@@ -32,7 +32,7 @@ Then downgrade bluez ```dnf install bluez-5.84-2.fc43``` and versionlock it agai
 - Configure Rotation Extension as manual Rotation toggle
 - Install [GJS OSK extension](https://github.com/Vishram1123/gjs-osk) to make the Gnome OSK usable (if your enter key gets stuck aswell, remove it)
 - Install [TouchUP extension](https://github.com/mityax/gnome-extension-touchup) to make the Gnome Shell more usable on a Touchscreen
-- Run ```widevine-installer``` to install the Widevinde CDM for Firefox and Chromium based browsers to watch Netflix, Prime, Spotify etc, works for system packages only 
+- Run ```widevine-installer``` to install the Widevinde CDM for Firefox and Chromium based browsers to watch Netflix, Prime, Spotify etc, works for system packages only (The widevine CDM module is not altered in any way, nor ist preinstalled or in any way distributed by me)  
 
 ## Credits
 
