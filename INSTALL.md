@@ -40,7 +40,8 @@ fastboot reboot
   <summary><strong>Dualboot installation (untested)</strong></summary>
 
 #### <strong>WARNING:</strong> 
-Even though they should work, these instructions are taken 1:1 from the Fedora 42 installation instructions and untested by me! If you have successfully set up a dualboot environment with them, please open a PR removing this warning. 
+Even though they **should** work, these instructions are taken 1:1 from the Fedora 42 installation instructions and untested by me! If you do successfully set up a dualboot environment with them, please open a PR removing this warning. 
+
 ---
 
 ### Dualboot notes
