@@ -14,7 +14,7 @@
 	- ```tuned``` & ```tuned-ppd``` for better performance and power profiles in Gnome and KDE
 	- ```widevine-installer``` from Asahi Linux
 	- ```gnome-shell-extension-appindicator``` & ```gnome-shell-extension-screen-autorotate``` for better Gnome experience
-	- a few more Gnome default apps
+	- a few more sensible packages & Gnome apps
 
 
 #### [Installation guide](./INSTALL.md)
