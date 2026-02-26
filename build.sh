@@ -142,8 +142,8 @@ make_image() {
     chroot $image_mnt ln -s ../run/systemd/resolve/stub-resolv.conf /etc/resolv.conf
 
     echo -e '\n### Copying boot image'
-    echo "### Debug: /boot contents"
-    ls -lah "$image_mnt/boot"
+    #echo "### Debug: /boot contents"
+    #ls -lah "$image_mnt/boot"
 
     cp $image_mnt/boot/boot*.img $image_dir/$image_name/boot.img
 
