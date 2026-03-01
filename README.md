@@ -28,6 +28,9 @@
 - Bluetooth works OOTB, but only with ```bluez-5.84-2.fc43``` which is therefore version locked. If this causes issues with upgrading using dnf, remove the versionlock ```dnf versionlock remove bluez``` and upgrade normally. 
 Then downgrade bluez ```dnf install bluez-5.84-2.fc43``` and versionlock it again ```dnf versionlock add bluez``` to keep it at the working version.
 
+### Upcoming
+- KDE Plasma flavor (soon™)
+
 ### Tips and Tricks
 - Configure Rotation Extension as manual Rotation toggle
 - Install [GJS OSK extension](https://github.com/Vishram1123/gjs-osk) to make the Gnome OSK usable (if your enter key gets stuck aswell, remove it)
