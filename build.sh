@@ -6,9 +6,9 @@ mkosi_rootfs='mkosi.rootfs'
 image_dir='images'
 image_mnt='mnt_image'
 date=$(date +%Y%m%d)
-image_name=pipa-fedora43-${mkosi_profile}-${date}-1
 de_name="${1:-}"
 mkosi_profile=""
+image_name=pipa-fedora43-${mkosi_profile}-${date}-1
 
 get_de_name() {
     if [[ "$de_name" == "plasma" ]]; then
