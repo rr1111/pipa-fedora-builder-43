@@ -7,10 +7,10 @@ image_dir='images'
 image_mnt='mnt_image'
 date=$(date +%Y%m%d)
 image_name=pipa-fedora43-kde-testing-${date}-1
+de_name="${1:-}"
 mkosi_profile=""
 
 get_de_name() {
-    local de_name="${1:-}"
     if [[ "$de_name" == "plasma" ]]; then
         echo "##### KDE Plasma chosen"
         mkosi_profile="plasma"
@@ -37,7 +37,7 @@ mkosi_create_rootfs() {
     umount_image
     mkosi clean
     rm -rf .mkosi*
-    get_de_name "${1:-}"
+    get_de_name "$de_name"
     mkosi --profile "$mkosi_profile"
     # not sure how/why this directory is being created by mkosi
     rm -rf $mkosi_rootfs/root/pipa-fedora-builder
