@@ -22,6 +22,8 @@ get_de_name() {
     fi
 }
 
+get_de_name "$de_name"
+
 image_name=pipa-fedora43-${mkosi_profile}-${date}-1
 
 # this has to match the volume_id in installer_data.json
@@ -38,7 +40,6 @@ mkosi_create_rootfs() {
     umount_image
     mkosi clean
     rm -rf .mkosi*
-    get_de_name "$de_name"
     mkosi --profile "$mkosi_profile"
     # not sure how/why this directory is being created by mkosi
     rm -rf $mkosi_rootfs/root/pipa-fedora-builder
