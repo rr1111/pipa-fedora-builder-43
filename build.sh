@@ -6,7 +6,7 @@ mkosi_rootfs='mkosi.rootfs'
 image_dir='images'
 image_mnt='mnt_image'
 date=$(date +%Y%m%d)
-image_name=pipa-fedora43-kde-testing-${date}-1
+image_name=pipa-fedora43-${mkosi_profile}-${date}-1
 de_name="${1:-}"
 mkosi_profile=""
 
