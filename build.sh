@@ -6,7 +6,22 @@ mkosi_rootfs='mkosi.rootfs'
 image_dir='images'
 image_mnt='mnt_image'
 date=$(date +%Y%m%d)
-image_name=pipa-fedora43-${date}-1
+de_name="${1:-}"
+mkosi_profile=""
+image_name=pipa-fedora43-${mkosi_profile}-${date}-1
+
+get_de_name() {
+    if [[ "$de_name" == "plasma" ]]; then
+        echo "### KDE Plasma chosen"
+        mkosi_profile="plasma"
+    elif [[ -z "$de_name" || "$de_name" == "gnome" ]]; then
+        echo "### Gnome chosen"
+        mkosi_profile="gnome"
+    else
+        echo "### Invalid DE: $de_name, defaulting to Gnome ..."
+        mkosi_profile="gnome"
+    fi
+}
 
 # this has to match the volume_id in installer_data.json
 ROOTFS_UUID=$(uuidgen)
@@ -22,14 +37,15 @@ mkosi_create_rootfs() {
     umount_image
     mkosi clean
     rm -rf .mkosi*
-    mkosi
+    get_de_name "$de_name"
+    mkosi --profile "$mkosi_profile"
     # not sure how/why this directory is being created by mkosi
     rm -rf $mkosi_rootfs/root/pipa-fedora-builder
 }
 
 mount_image() {
     # get last modified image
-    image_path=$(find $image_dir -maxdepth 1 -type d | grep -E "/pipa-fedora43-[0-9]{8}-[0-9]" | sort | tail -1)
+    image_path=$(find $image_dir -maxdepth 1 -type d | grep -E "/pipa-fedora43-${mkosi_profile-}[0-9]{8}-[0-9]" | sort | tail -1)
 
     [[ -z $image_path ]] && echo -n "image not found in $image_dir\nexiting..." && exit
 

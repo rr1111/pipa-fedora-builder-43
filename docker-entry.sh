@@ -19,6 +19,6 @@ unregister_binfmt(){
 # Register binfmt for other archs
 uname -m | grep aarch64 || register_binfmt
 
-env PATH=/root/.local/bin:/root/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin bash ./build.sh
+env PATH=/root/.local/bin:/root/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin bash ./build.sh "$@"
 
 uname -m | grep aarch64 || unregister_binfmt
