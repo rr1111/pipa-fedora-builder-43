@@ -7,14 +7,14 @@
 
 - [Pocketblue](https://github.com/pocketblue) ```pocketblue``` & ```sm8250``` COPR repos and packages for more up to date packages
 
-- Minimal Gnome Desktop or KDE Plasma with a few more packages installed by default, including: 
-	- ```unzip``` for gnome extensions to work OOTB
+- Minimal Gnome or KDE Plasma Desktop with a few more packages installed by default, including: 
 	- ```plymouth``` & ```plymouth-theme-spinner``` for fedora boot & shutdown animations
 	- ```fish``` for a better command line experience, default for ```user```
 	- ```tuned``` & ```tuned-ppd``` for better performance and power profiles in Gnome and KDE
 	- ```widevine-installer``` from Asahi Linux
+    - ```unzip``` for gnome extensions to work OOTB
 	- ```gnome-shell-extension-appindicator``` & ```gnome-shell-extension-screen-autorotate``` for better Gnome experience
-	- a few more sensible packages & Gnome apps
+	- a few more sensible packages
 
 
 #### [Installation guide](./INSTALL.md)
