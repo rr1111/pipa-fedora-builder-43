@@ -12,13 +12,13 @@ image_name=pipa-fedora43-${mkosi_profile}-${date}-1
 
 get_de_name() {
     if [[ "$de_name" == "plasma" ]]; then
-        echo "##### KDE Plasma chosen"
+        echo "### KDE Plasma chosen"
         mkosi_profile="plasma"
     elif [[ -z "$de_name" || "$de_name" == "gnome" ]]; then
-        echo "#### Gnome chosen"
+        echo "### Gnome chosen"
         mkosi_profile="gnome"
     else
-        echo "##### Invalid DE: $de_name, defaulting to Gnome ..."
+        echo "### Invalid DE: $de_name, defaulting to Gnome ..."
         mkosi_profile="gnome"
     fi
 }
@@ -45,7 +45,7 @@ mkosi_create_rootfs() {
 
 mount_image() {
     # get last modified image
-    image_path=$(find $image_dir -maxdepth 1 -type d | grep -E "/pipa-fedora43-[0-9]{8}-[0-9]" | sort | tail -1)
+    image_path=$(find $image_dir -maxdepth 1 -type d | grep -E "/pipa-fedora43-${mkosi_profile-}[0-9]{8}-[0-9]" | sort | tail -1)
 
     [[ -z $image_path ]] && echo -n "image not found in $image_dir\nexiting..." && exit
 
