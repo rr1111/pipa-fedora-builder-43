@@ -8,7 +8,6 @@ image_mnt='mnt_image'
 date=$(date +%Y%m%d)
 de_name="${1:-}"
 mkosi_profile=""
-image_name=pipa-fedora43-${mkosi_profile}-${date}-1
 
 get_de_name() {
     if [[ "$de_name" == "plasma" ]]; then
@@ -22,6 +21,8 @@ get_de_name() {
         mkosi_profile="gnome"
     fi
 }
+
+image_name=pipa-fedora43-${mkosi_profile}-${date}-1
 
 # this has to match the volume_id in installer_data.json
 ROOTFS_UUID=$(uuidgen)
