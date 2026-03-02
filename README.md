@@ -5,7 +5,7 @@
 ### Features:
 - <strong>System fully updated to Fedora 43</strong>
 
-- [Pocketblue](https://github.com/pocketblue) ```pocketblue``` & ```sm8250``` COPR repos and packages for more up to date packages
+- [Pocketblue](https://github.com/pocketblue) ```pocketblue``` & ```sm8250``` COPR repos and packages for more up to date pipa packages
 
 - Minimal Gnome or KDE Plasma Desktop with a few more packages installed by default, including: 
 	- ```plymouth``` & ```plymouth-theme-spinner``` for fedora boot & shutdown animations
