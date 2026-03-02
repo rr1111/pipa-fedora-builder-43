@@ -37,7 +37,8 @@ mkosi_create_rootfs() {
     umount_image
     mkosi clean
     rm -rf .mkosi*
-    mkosi --profile $mkosi_profile
+    get_de_name
+    mkosi --profile "$mkosi_profile"
     # not sure how/why this directory is being created by mkosi
     rm -rf $mkosi_rootfs/root/pipa-fedora-builder
 }
