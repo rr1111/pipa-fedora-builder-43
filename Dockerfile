@@ -9,4 +9,5 @@ WORKDIR /build/
 
 COPY . .
 
-CMD ["/bin/sh", "./docker-entry.sh"]
+CMD []
+ENTRYPOINT ["/bin/sh", "./docker-entry.sh"]
