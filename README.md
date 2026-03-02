@@ -7,7 +7,7 @@
 
 - [Pocketblue](https://github.com/pocketblue) ```pocketblue``` & ```sm8250``` COPR repos and packages for more up to date packages
 
-- Minimal Gnome Desktop with a few more packages installed by default, including: 
+- Minimal Gnome Desktop or KDE Plasma with a few more packages installed by default, including: 
 	- ```unzip``` for gnome extensions to work OOTB
 	- ```plymouth``` & ```plymouth-theme-spinner``` for fedora boot & shutdown animations
 	- ```fish``` for a better command line experience, default for ```user```
@@ -27,9 +27,6 @@
 
 - Bluetooth works OOTB, but only with ```bluez-5.84-2.fc43``` which is therefore version locked. If this causes issues with upgrading using dnf, remove the versionlock ```dnf versionlock remove bluez``` and upgrade normally. 
 Then downgrade bluez ```dnf install bluez-5.84-2.fc43``` and versionlock it again ```dnf versionlock add bluez``` to keep it at the working version.
-
-### Upcoming
-- KDE Plasma flavor (soon™)
 
 ### Tips and Tricks
 - Configure Rotation Extension as manual Rotation toggle
