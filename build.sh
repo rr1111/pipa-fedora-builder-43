@@ -127,6 +127,9 @@ make_image() {
     arch-chroot $image_mnt systemctl enable NetworkManager.service sshd.service systemd-resolved.service
     arch-chroot $image_mnt systemctl enable qbootctl.service bootmac-bluetooth.service tuned.service tuned-ppd.service
     arch-chroot $image_mnt systemctl disable iio-sensor-proxy.service
+    if [[ "$mkosi_profile" == "plasma" ]]; then
+        arch-chroot $image_mnt systemctl enable plasmalogin.service
+    fi
 
     echo "### Disabling systemd-firstboot"
     arch-chroot $image_mnt rm -f /usr/lib/systemd/system/sysinit.target.wants/systemd-firstboot.service
