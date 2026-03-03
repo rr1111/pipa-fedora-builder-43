@@ -9,7 +9,6 @@
 ### Flavors:
 - Minimal KDE Plasma (recommended) or KDE Plasma Mobile (beta) Desktops:
 	- ```plasma-login-manager``` default display manager for most recent Plasma experience
-	- QMLKonsole for touch-friendly Terminal
 
 - Minimal Gnome Desktop:
 	- ```unzip``` for gnome extensions to work OOTB
