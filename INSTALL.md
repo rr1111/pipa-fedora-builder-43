@@ -1,17 +1,7 @@
 # Installation guide
 
 <details>
-  <summary><strong>Notes</strong></summary>
-
-- Kernel updates are handled by dnf. Updated boot image will be flashed to the active slot
-- Sensors may break after suspend 
-- Front camera doesnt work and even though it never did for me, the back one has been reported to work (poorly) by others though
-- Sensors are disabled by default, to enable install ```pipa-sensors``` package and enable ```iio-sensor-proxy``` and ```hexagonrpcd-sdsp``` services
-
-</details>
-
-<details>
-  <summary><strong>Singleboot installation</strong></summary>
+  <summary><strong>Singleboot installation</strong></summary>
 
 #### Reboot your tablet into bootloader mode by holding ```Volume Down``` and ```Power``` buttons
 
@@ -38,7 +28,7 @@ fastboot reboot
 </details>
 
 <details>
-  <summary><strong>Dualboot installation (untested)</strong></summary>
+  <summary><strong>Dualboot installation (untested)</strong></summary>
 
 #### <strong>WARNING:</strong> 
 Even though they **should** work, these instructions are taken 1:1 from the Fedora 42 installation instructions and untested by me! If you do successfully set up a dualboot environment with them, please open a PR removing this warning. 

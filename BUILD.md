@@ -22,7 +22,11 @@ docker run --privileged -v "$(pwd)"/images:/build/images -v "/dev:/dev" pipa-fed
 ```
 docker run --privileged -v "$(pwd)"/images:/build/images -v "/dev:/dev" pipa-fedora-builder plasma
 ```
-If you dont pass a desktop arg to the container or pass an invalid one, it will default to gnome
+- To build the minimal KDE Plasma Mobile Desktop images:
+```
+docker run --privileged -v "$(pwd)"/images:/build/images -v "/dev:/dev" pipa-fedora-builder plasma-mobile
+```
+If you dont pass a desktop arg to the container or pass an invalid one, it will default to gnome!
 
 ### Building Notes
 
