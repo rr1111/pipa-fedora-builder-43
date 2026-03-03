@@ -13,6 +13,9 @@ get_de_name() {
     if [[ "$de_name" == "plasma" ]]; then
         echo "### KDE Plasma chosen"
         mkosi_profile="plasma"
+    elif [[ "$de_name" == "plasma-mobile" ]]; then
+        echo "### KDE Plasma mobile chosen"
+        mkosi_profile="plasma-mobile"
     elif [[ -z "$de_name" || "$de_name" == "gnome" ]]; then
         echo "### Gnome chosen"
         mkosi_profile="gnome"
@@ -129,6 +132,9 @@ make_image() {
     arch-chroot $image_mnt systemctl disable iio-sensor-proxy.service
     if [[ "$mkosi_profile" == "plasma" ]]; then
         arch-chroot $image_mnt systemctl enable plasmalogin.service
+    elif [[ "$mkosi_profile" == "plasma-mobile" ]]; then
+        arch-chroot $image_mnt systemctl enable --force plasmalogin.service
+        arch-chroot $image_mnt systemctl disable sddm.service
     fi
 
     echo "### Disabling systemd-firstboot"
