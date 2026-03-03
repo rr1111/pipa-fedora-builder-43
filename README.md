@@ -7,7 +7,7 @@
 - [Pocketblue](https://github.com/pocketblue) ```pocketblue``` & ```sm8250``` COPR repos and packages for more up to date pipa packages
 
 ### Flavors:
-- Minimal KDE Plasma (recommended) or KDE Plasma Mobile Desktops (beta):
+- Minimal KDE Plasma (recommended) or KDE Plasma Mobile (beta) Desktops:
 	- ```plasma-login-manager``` default display manager for most recent Plasma experience
 	- QMLKonsole for touch-friendly Terminal
 
