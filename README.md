@@ -39,7 +39,7 @@ Then downgrade bluez ```dnf install bluez-5.84-2.fc43``` and versionlock it agai
 ## Credits
 
 - [Pocketblue](https://github.com/pocketblue) for COPR Repos, packages & their awesome work
-- [pipa-fedora-builder](https://github.com/timoxa0/pipa-fedora-builder) original scripts this is froked from, by timoxa0 (thanks!!!)
+- [pipa-fedora-builder](https://github.com/timoxa0/pipa-fedora-builder) original scripts this is forked from, by timoxa0 (thanks!!!)
 - [nabu-fedora-builder](https://github.com/nik012003/nabu-fedora-builder) original original scripts
 - [Kernel port](https://github.com/pipa-mainline/linux) by adomerle, V1p0ll, Lukapanio, domin746826 and others
 - [Void templates](https://github.com/pipa-mainline/void-pipa) by adomerle
