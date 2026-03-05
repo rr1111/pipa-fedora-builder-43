@@ -14,18 +14,13 @@ docker build -t 'pipa-fedora-builder' .
 ```
 
 ### Run the container with privleges
-- To build the minimal Gnome Desktop images:
+- To build the minimal Desktop images:
 ```
-docker run --privileged -v "$(pwd)"/images:/build/images -v "/dev:/dev" pipa-fedora-builder gnome
+docker run --privileged -v "$(pwd)"/images:/build/images -v "/dev:/dev" pipa-fedora-builder <desktop-arg>
 ```
-- To build the minimal KDE Plasma Desktop images:
-```
-docker run --privileged -v "$(pwd)"/images:/build/images -v "/dev:/dev" pipa-fedora-builder plasma
-```
-- To build the minimal KDE Plasma Mobile Desktop images:
-```
-docker run --privileged -v "$(pwd)"/images:/build/images -v "/dev:/dev" pipa-fedora-builder plasma-mobile
-```
+replace ```<desktop-arg>``` with the de of your choice:
+```gnome```, ```plasma``` or ```plasma-mobile```
+
 If you dont pass a desktop arg to the container or pass an invalid one, it will default to gnome!
 
 ### Building Notes
