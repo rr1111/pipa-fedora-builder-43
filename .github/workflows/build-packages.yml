@@ -1,4 +1,4 @@
-name: Build install package
+name: Build install packages
 
 permissions:
   contents: write
