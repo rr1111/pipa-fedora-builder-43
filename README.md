@@ -5,6 +5,7 @@
 ### Features:
 - <strong>System fully updated to Fedora 43</strong>
 - [Pocketblue](https://github.com/pocketblue) ```pocketblue``` & ```sm8250``` COPR repos and packages for more up to date pipa packages
+- [pipa-packages](https://github.com/rr1111/pipa-fedora-packages) COPR repo for more up to date kernel
 
 ### Flavors:
 - Minimal KDE Plasma (recommended) or KDE Plasma Mobile (beta) Desktops:
