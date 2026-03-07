@@ -18,8 +18,10 @@ docker build -t 'pipa-fedora-builder' .
 ```
 docker run --privileged -v "$(pwd)"/images:/build/images -v "/dev:/dev" pipa-fedora-builder <desktop-arg>
 ```
-replace ```<desktop-arg>``` with the de of your choice:
+replace ```<desktop-arg>``` with the flavor of your choice:
 ```gnome```, ```plasma``` or ```plasma-mobile```
+or with a Fedora Edition:
+```workstation``` or ```plasma-full```
 
 If you dont pass a desktop arg to the container or pass an invalid one, it will default to gnome!
 
