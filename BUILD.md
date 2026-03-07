@@ -22,6 +22,7 @@ replace ```<desktop-arg>``` with the flavor of your choice:
 ```gnome```, ```plasma``` or ```plasma-mobile``` 
 
 Remove ```-rm``` if you want to keep the container after running. 
+
 If you dont pass a desktop arg to the container or pass an invalid one, it will default to gnome!
 
 ### Building Notes
