@@ -1,4 +1,4 @@
-[copr:copr.fedorainfracloud.org:reyr111:pipa-packages]
+[reyr111:pipa-packages]
 name=Copr repo for pipa-packages owned by reyr111
 baseurl=https://download.copr.fedorainfracloud.org/results/reyr111/pipa-packages/fedora-$releasever-$basearch/
 type=rpm-md
