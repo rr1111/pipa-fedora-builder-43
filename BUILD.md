@@ -20,10 +20,6 @@ docker run --privileged -v "$(pwd)"/images:/build/images -v "/dev:/dev" pipa-fed
 ```
 replace ```<desktop-arg>``` with the flavor of your choice:
 ```gnome```, ```plasma``` or ```plasma-mobile``` 
-or with a Fedora Edition:
-```workstation``` or ```plasma-full``` 
-
-(Keep in mind the Fedora Editions are pretty bloated so dont use them if youre low on storage)
 
 If you dont pass a desktop arg to the container or pass an invalid one, it will default to gnome!
 
