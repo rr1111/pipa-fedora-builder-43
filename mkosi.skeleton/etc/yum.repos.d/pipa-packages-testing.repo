@@ -1,0 +1,11 @@
+[reyr111:pipa-packages-testing]
+name=Copr repo for pipa-packages-testing owned by reyr111
+baseurl=https://download.copr.fedorainfracloud.org/results/reyr111/pipa-packages-testing/fedora-$releasever-$basearch/
+type=rpm-md
+skip_if_unavailable=True
+gpgcheck=1
+gpgkey=https://download.copr.fedorainfracloud.org/results/reyr111/pipa-packages-testing/pubkey.gpg
+repo_gpgcheck=0
+enabled=0
+enabled_metadata=1
+priority=100
