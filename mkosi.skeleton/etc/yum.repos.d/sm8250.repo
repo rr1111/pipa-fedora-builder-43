@@ -1,4 +1,4 @@
-[pipa-support]
+[pocketblue:sm8250]
 name=Xiaomi Pad 6 - Pocketblue Support Repo
 baseurl=https://download.copr.fedorainfracloud.org/results/pocketblue/sm8250/fedora-$releasever-$basearch/
 type=rpm-md
@@ -9,4 +9,3 @@ repo_gpgcheck=0
 enabled=1
 enabled_metadata=1
 priority=90
-
