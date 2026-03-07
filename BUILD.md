@@ -25,8 +25,8 @@ or with a Fedora Edition:
 
 (Keep in mind the Fedora Editions are pretty bloated so dont use them if youre low on storage)
 
-**If you dont pass a desktop arg to the container or pass an invalid one, it will default to gnome!
-**
+If you dont pass a desktop arg to the container or pass an invalid one, it will default to gnome!
+
 ### Building Notes
 
 - takes ~20 minutes on my mid end laptop, so be patient when building
