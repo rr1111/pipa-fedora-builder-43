@@ -16,13 +16,16 @@ jobs:
     - name: Build the Docker image
       run: docker build . -t 'pipa-fedora-builder'
 
-    - name: Build the Fedora Gnome image
+    - name: Build the Gnome image
       run: docker run --privileged -v "$(pwd)"/images:/build/images -v "/dev:/dev" pipa-fedora-builder gnome
 
-    - name: Build the Fedora Plasma image
+    - name: Build the Phosh image
+      run: docker run --privileged -v "$(pwd)"/images:/build/images -v "/dev:/dev" pipa-fedora-builder phosh
+
+    - name: Build the Plasma image
       run: docker run --privileged -v "$(pwd)"/images:/build/images -v "/dev:/dev" pipa-fedora-builder plasma
 
-    - name: Build the Fedora Plasma Mobile image
+    - name: Build the Plasma Mobile image
       run: docker run --privileged -v "$(pwd)"/images:/build/images -v "/dev:/dev" pipa-fedora-builder plasma-mobile
 
     - name: Get current date
