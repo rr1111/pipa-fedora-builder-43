@@ -25,6 +25,8 @@ Remove ```-rm``` if you want to keep the container after running.
 
 If you dont pass a desktop arg to the container or pass an invalid one, it will default to gnome!
 
+[Installation guide](./INSTALL.md)
+
 ### Building Notes
 
 - takes ~20 minutes on my mid end laptop, so be patient when building
