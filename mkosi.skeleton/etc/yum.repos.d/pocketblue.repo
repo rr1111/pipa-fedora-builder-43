@@ -1,4 +1,4 @@
-[copr:copr.fedorainfracloud.org:pocketblue:common]
+[pocketblue:common]
 name=Copr repo for common owned by pocketblue
 baseurl=https://download.copr.fedorainfracloud.org/results/pocketblue/common/fedora-$releasever-$basearch/
 type=rpm-md
