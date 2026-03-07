@@ -16,7 +16,7 @@ docker build -t 'pipa-fedora-builder' .
 ### Run the container with privleges
 - To build the minimal Desktop images:
 ```
-docker run --privileged -v "$(pwd)"/images:/build/images -v "/dev:/dev" pipa-fedora-builder <desktop-arg>
+docker run --privileged -rm -v "$(pwd)"/images:/build/images -v "/dev:/dev" pipa-fedora-builder <desktop-arg>
 ```
 replace ```<desktop-arg>``` with the flavor of your choice:
 ```gnome```, ```plasma``` or ```plasma-mobile``` 
