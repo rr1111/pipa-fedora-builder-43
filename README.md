@@ -23,8 +23,6 @@
 
 	- sensible default packages
 
- - you can also build stock Fedora Workstation or KDE Plasma Images
-
 #### [Installation guide](./INSTALL.md)
 #### [Image building guide](./BUILD.md)
 
