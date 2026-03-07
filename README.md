@@ -8,7 +8,7 @@
 - [pipa-packages](https://github.com/rr1111/pipa-fedora-packages) COPR repo for more up to date kernel
 
 ### Flavors:
-- Minimal KDE Plasma (recommended) or KDE Plasma Mobile (beta) Desktops:
+- Minimal KDE Plasma (recommended) or KDE Plasma Mobile Desktops:
 	- ```plasma-login-manager``` default display manager for most recent Plasma experience
 
 - Minimal Gnome Desktop:
@@ -22,6 +22,8 @@
 	- ```widevine-installer``` from Asahi Linux
 
 	- sensible default packages
+
+ - you can also build stock Fedora Workstation or KDE Plasma Images
 
 #### [Installation guide](./INSTALL.md)
 #### [Image building guide](./BUILD.md)
