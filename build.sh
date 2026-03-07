@@ -109,7 +109,7 @@ make_image() {
     echo '### Loop mounting root.img'
     mount -o loop "$image_dir/$image_name/root.img" "$image_mnt"
     
-e    echo '### Copying files'
+    echo '### Copying files'
     rsync -aHAX --exclude '/tmp/*' --exclude '/boot/efi' --exclude '/efi' --exclude '/home/*' $mkosi_rootfs/ $image_mnt
     # this should be empty, but just in case
     rsync -aHAX $mkosi_rootfs/home/ $image_mnt/home
