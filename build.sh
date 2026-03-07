@@ -10,19 +10,28 @@ de_name="${1:-}"
 mkosi_profile=""
 
 get_de_name() {
-    if [[ "$de_name" == "plasma" ]]; then
-        echo "### KDE Plasma chosen"
-        mkosi_profile="plasma"
-    elif [[ "$de_name" == "plasma-mobile" ]]; then
-        echo "### KDE Plasma mobile chosen"
-        mkosi_profile="plasma-mobile"
-    elif [[ -z "$de_name" || "$de_name" == "gnome" ]]; then
-        echo "### Gnome chosen"
-        mkosi_profile="gnome"
-    else
-        echo "### Invalid DE: $de_name, defaulting to Gnome ..."
-        mkosi_profile="gnome"
-    fi
+    case "$de_name" in
+        plasma)
+            echo "### KDE Plasma chosen"
+            mkosi_profile="plasma"
+            ;;
+        plasma-mobile)
+            echo "### KDE Plasma mobile chosen"
+            mkosi_profile="plasma-mobile"
+            ;;
+        phosh)
+            echo "### Phosh chosen"
+            mkosi_profile="phosh"
+            ;;
+        gnome)
+            echo "### Gnome chosen"
+            mkosi_profile="gnome"
+            ;;
+        *)
+            echo "### Invalid DE: $de_name, defaulting to Gnome ..."
+            mkosi_profile="gnome"
+            ;;
+    esac
 }
 
 get_de_name "$de_name"
@@ -100,7 +109,7 @@ make_image() {
     echo '### Loop mounting root.img'
     mount -o loop "$image_dir/$image_name/root.img" "$image_mnt"
     
-    echo '### Copying files'
+e    echo '### Copying files'
     rsync -aHAX --exclude '/tmp/*' --exclude '/boot/efi' --exclude '/efi' --exclude '/home/*' $mkosi_rootfs/ $image_mnt
     # this should be empty, but just in case
     rsync -aHAX $mkosi_rootfs/home/ $image_mnt/home
