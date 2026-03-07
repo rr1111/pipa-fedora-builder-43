@@ -95,7 +95,7 @@ make_image() {
 
     ###### create rootfs filesystem on root.img ######
     echo '### Creating rootfs ext4 filesystem on root.img '
-    MKE2FS_DEVICE_PHYS_SECTSIZE=4096 MKE2FS_DEVICE_SECTSIZE=4096 mkfs.ext4 -U "$ROOTFS_UUID" -L 'fedora_pipa' "$image_dir/$image_name/root.img"
+    MKE2FS_DEVICE_PHYS_SECTSIZE=4096 MKE2FS_DEVICE_SECTSIZE=4096 mkfs.btrfs -U "$ROOTFS_UUID" -L 'fedora_pipa' "$image_dir/$image_name/root.img"
 
     echo '### Loop mounting root.img'
     mount -o loop "$image_dir/$image_name/root.img" "$image_mnt"
