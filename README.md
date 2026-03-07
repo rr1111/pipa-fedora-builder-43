@@ -14,7 +14,11 @@
 - Minimal Gnome Desktop:
 	- ```unzip``` for gnome extensions to work OOTB
 	- ```gnome-shell-extension-appindicator``` & ```gnome-shell-extension-screen-autorotate``` for better Gnome experience
-		
+	
+	
+- Minimal Phosh Desktop
+ 
+ 
 - Common Packages:
 	- ```plymouth``` & ```plymouth-theme-spinner``` for fedora boot & shutdown animations
 	- ```fish``` for a better command line experience, default for ```user```
