@@ -16,8 +16,9 @@
 	- ```gnome-shell-extension-appindicator``` & ```gnome-shell-extension-screen-autorotate``` for better Gnome experience
 	
 	
-- Minimal Phosh Desktop
- 
+- Minimal Phosh Desktop 
+
+- TTY with essentials
  
 - Common Packages:
 	- ```plymouth``` & ```plymouth-theme-spinner``` for fedora boot & shutdown animations

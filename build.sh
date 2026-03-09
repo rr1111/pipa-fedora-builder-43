@@ -11,6 +11,10 @@ mkosi_profile=""
 
 get_de_name() {
     case "$de_name" in
+        tty)
+            echo "### tty chosen"
+            mkosi_profile=""
+            ;;
         plasma)
             echo "### KDE Plasma chosen"
             mkosi_profile="plasma"
