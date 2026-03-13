@@ -42,6 +42,7 @@
 - Front camera doesnt work and even though it never did for me, the back one has been reported to work (poorly) by others though
 - Sensors may break after suspend 
 - Sensors are disabled by default, to enable install ```pipa-sensors``` package and enable ```iio-sensor-proxy``` and ```hexagonrpcd-sdsp``` services
+- To automatically restart the services and fix the sensors, install ```pipa-sensor-restart```. It takes ~10-15s after waking for sensors to come back online
 - Hall Sensor for flip case works and properly suspends and wakes the system
 
 ### Tips and Tricks:
