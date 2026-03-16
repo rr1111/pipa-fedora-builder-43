@@ -157,7 +157,7 @@ make_image() {
     elif [[ "$mkosi_profile" == "niri" ]]; then
         arch-chroot $image_mnt systemctl enable gdm.service
         arch-chroot $image_mnt systemctl --user add-wants niri.service dms
-        arch-chroot $image_mnt dnf -y copr enable avengemedia/dms
+        arch-chroot $image_mnt dnf4 -y copr enable avengemedia/dms
     fi
 
     echo "### Disabling systemd-firstboot"
