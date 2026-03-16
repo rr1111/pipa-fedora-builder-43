@@ -10,7 +10,6 @@ de_name="${1:-}"
 mkosi_profile=""
 
 get_de_name() {
-    echo "### Flavor:"
     case "$de_name" in
         tty)
             echo "### tty chosen"
@@ -31,10 +30,6 @@ get_de_name() {
         gnome)
             echo "### Gnome chosen"
             mkosi_profile="gnome"
-            ;;
-        niri)
-            echo "### Niri chosen"
-            mkosi_profile="niri"
             ;;
         *)
             echo "### Invalid DE: $de_name, defaulting to Gnome ..."
@@ -154,10 +149,13 @@ make_image() {
     elif [[ "$mkosi_profile" == "plasma-mobile" ]]; then
         arch-chroot $image_mnt systemctl enable --force plasmalogin.service
         arch-chroot $image_mnt systemctl disable sddm.service
+<<<<<<< HEAD
     elif [[ "$mkosi_profile" == "niri" ]]; then
         arch-chroot $image_mnt systemctl enable gdm.service
         arch-chroot $image_mnt systemctl --user add-wants niri.service dms
-        arch-chroot $image_mnt dnf4 -y copr enable avengemedia/dms
+        arch-chroot $image_mnt dnf -y copr enable avengemedia/dms
+=======
+>>>>>>> parent of e49cf42 (add initial support for building niri images)
     fi
 
     echo "### Disabling systemd-firstboot"
