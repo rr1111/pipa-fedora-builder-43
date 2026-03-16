@@ -19,7 +19,7 @@ docker build -t 'pipa-fedora-builder' .
 docker run --privileged --rm -v "$(pwd)"/images:/build/images -v "/dev:/dev" pipa-fedora-builder <desktop-arg>
 ```
 replace ```<desktop-arg>``` with the flavor of your choice:
-```tty```, ```gnome```, ```plasma```, ```plasma-mobile``` or ```phosh```
+```tty```, ```gnome```, ```plasma```, ```plasma-mobile```, ```niri``` or ```phosh```
 
 Remove ```-rm``` if you want to keep the container after running. 
 

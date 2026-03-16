@@ -148,6 +148,7 @@ make_image() {
     arch-chroot $image_mnt systemctl enable NetworkManager.service sshd.service systemd-resolved.service
     arch-chroot $image_mnt systemctl enable qbootctl.service bootmac-bluetooth.service tuned.service tuned-ppd.service
     arch-chroot $image_mnt systemctl disable iio-sensor-proxy.service
+    echo "### Enabling Desktop services"
     if [[ "$mkosi_profile" == "plasma" ]]; then
         arch-chroot $image_mnt systemctl enable plasmalogin.service
     elif [[ "$mkosi_profile" == "plasma-mobile" ]]; then
@@ -156,6 +157,7 @@ make_image() {
     elif [[ "$mkosi_profile" == "niri" ]]; then
         arch-chroot $image_mnt systemctl enable gdm.service
         arch-chroot $image_mnt systemctl --user add-wants niri.service dms
+        arch-chroot $image_mnt dnf -y copr enable avengemedia/dms
     fi
 
     echo "### Disabling systemd-firstboot"
