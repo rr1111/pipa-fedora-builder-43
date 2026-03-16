@@ -10,6 +10,7 @@ de_name="${1:-}"
 mkosi_profile=""
 
 get_de_name() {
+    echo "### Flavor:"
     case "$de_name" in
         tty)
             echo "### tty chosen"
@@ -30,6 +31,10 @@ get_de_name() {
         gnome)
             echo "### Gnome chosen"
             mkosi_profile="gnome"
+            ;;
+        niri)
+            echo "### Niri chosen"
+            mkosi_profile="niri"
             ;;
         *)
             echo "### Invalid DE: $de_name, defaulting to Gnome ..."
@@ -148,6 +153,9 @@ make_image() {
     elif [[ "$mkosi_profile" == "plasma-mobile" ]]; then
         arch-chroot $image_mnt systemctl enable --force plasmalogin.service
         arch-chroot $image_mnt systemctl disable sddm.service
+    elif [[ "$mkosi_profile" == "niri" ]]; then
+        arch-chroot $image_mnt systemctl enable gdm.service
+        arch-chroot $image_mnt systemctl --user add-wants niri.service dms
     fi
 
     echo "### Disabling systemd-firstboot"
