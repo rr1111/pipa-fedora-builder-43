@@ -15,7 +15,8 @@
 	- ```unzip``` for gnome extensions to work OOTB
 	- ```gnome-shell-extension-appindicator``` & ```gnome-shell-extension-screen-autorotate``` for better Gnome experience
 	
-- Minimal Niri WM Setup
+- --Minimal Niri WM Setup--
+(broken rn, if you care to fix, please do open a PR)
 	
 - Minimal Phosh Desktop 
 
