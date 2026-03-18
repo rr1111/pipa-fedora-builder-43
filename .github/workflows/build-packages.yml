@@ -31,8 +31,8 @@ jobs:
     - name: Build the tty image
       run: docker run --privileged -v "$(pwd)"/images:/build/images -v "/dev:/dev" pipa-fedora-builder tty
 
-    - name: Build the Niri image
-      run: docker run --privileged -v "$(pwd)"/images:/build/images -v "/dev:/dev" pipa-fedora-builder niri 
+    #- name: Build the Niri image
+    #  run: docker run --privileged -v "$(pwd)"/images:/build/images -v "/dev:/dev" pipa-fedora-builder niri 
 
     - name: Get current date
       id: date
