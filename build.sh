@@ -174,9 +174,6 @@ make_image() {
     echo 'user:147147' | arch-chroot $image_mnt chpasswd
     arch-chroot $image_mnt chsh -s /bin/fish user
     
-    echo "### Version-locking bluez as newest version breaks bluetooth on pipa"
-    arch-chroot $image_mnt dnf -y versionlock add bluez
-
     # echo "### SElinux labeling filesystem"
     # arch-chroot $image_mnt setfiles -F -p -c /etc/selinux/targeted/policy/policy.* -e /proc -e /sys -e /dev /etc/selinux/targeted/contexts/files/file_contexts /
     # arch-chroot $image_mnt setfiles -F -p -c /etc/selinux/targeted/policy/policy.* -e /proc -e /sys -e /dev /etc/selinux/targeted/contexts/files/file_contexts /boot
