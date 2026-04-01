@@ -45,7 +45,7 @@ get_de_name() {
 
 get_de_name "$de_name"
 
-image_name=pipa-fedora43-${mkosi_profile}-${date}-1
+image_name=pipa-fedora44-${mkosi_profile}-${date}-prerelease-1
 
 # this has to match the volume_id in installer_data.json
 ROOTFS_UUID=$(uuidgen)
