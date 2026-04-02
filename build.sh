@@ -176,7 +176,6 @@ make_image() {
         arch-chroot $image_mnt systemctl enable --force plasmalogin.service
     elif [[ "$mkosi_profile" == "plasma-mobile" ]]; then
         arch-chroot $image_mnt systemctl enable --force plasmalogin.service
-        arch-chroot $image_mnt systemctl disable sddm.service
     elif [[ "$mkosi_profile" == "gnome" ]]; then
         arch-chroot $image_mnt systemctl enable gdm.service
     elif [[ "$mkosi_profile" == "niri" ]]; then
