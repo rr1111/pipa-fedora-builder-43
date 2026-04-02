@@ -171,10 +171,6 @@ make_image() {
     arch-chroot $image_mnt systemctl enable qbootctl.service bootmac-bluetooth.service tuned.service tuned-ppd.service
     arch-chroot $image_mnt systemctl disable iio-sensor-proxy.service
     echo "### Enabling Desktop services"
-    case "$mkosi_profile" in
-        "" )   arch-chroot "$image_mnt" systemctl set-default multi-user.target ;;
-        * )    arch-chroot "$image_mnt" systemctl set-default graphical.target ;;
-    esac
     if [[ "$mkosi_profile" == "plasma" ]]; then
         arch-chroot $image_mnt systemctl enable plasmalogin.service
     elif [[ "$mkosi_profile" == "plasma-mobile" ]]; then
