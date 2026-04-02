@@ -7,12 +7,10 @@
 - [pipa-packages](https://github.com/rr1111/pipa-fedora-packages) COPR repo for more up to date kernel
 
 ### Flavors:
-- Minimal KDE Plasma (recommended) or KDE Plasma Mobile Desktops:
-	- ```plasma-login-manager``` default display manager for most recent Plasma experience
+- Minimal KDE Plasma (recommended) or KDE Plasma Mobile Desktops
 
 - Minimal Gnome Desktop:
-	- ```unzip``` for gnome extensions to work OOTB
-	- ```gnome-shell-extension-appindicator``` & ```gnome-shell-extension-screen-autorotate``` for better Gnome experience
+	- ```gnome-shell-extension-appindicator``` & ```gnome-shell-extension-screen-autorotate``` included
 	
 - ~~Minimal Niri WM Setup~~
 (broken rn, if you care to fix, please do open a PR)
