@@ -90,7 +90,7 @@ mkosi_create_rootfs() {
 
 mount_image() {
     # get last modified image
-    image_path=$(find $image_dir -maxdepth 1 -type d | grep -E grep -E "/pipa-${os_release}-${mkosi_profile}-[0-9]{8}-${release_type}-[0-9]+$" | sort | tail -1)
+    image_path=$(find $image_dir -maxdepth 1 -type d | grep -E "/pipa-${os_release}-${mkosi_profile}-[0-9]{8}-${release_type}-[0-9]+$" | sort | tail -1)
 
     [[ -z $image_path ]] && echo -n "image not found in $image_dir\nexiting..." && exit
 
@@ -176,7 +176,7 @@ make_image() {
         * )    arch-chroot "$image_mnt" systemctl set-default graphical.target ;;
     esac
     if [[ "$mkosi_profile" == "plasma" ]]; then
-        arch-chroot $image_mnt systemctl enable --force plasmalogin.service
+        arch-chroot $image_mnt systemctl enable plasmalogin.service
     elif [[ "$mkosi_profile" == "plasma-mobile" ]]; then
         arch-chroot $image_mnt systemctl enable --force plasmalogin.service
         arch-chroot $image_mnt systemctl disable sddm.service
