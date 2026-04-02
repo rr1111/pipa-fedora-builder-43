@@ -70,7 +70,7 @@ image_revision="$(next_revision "$base_name")"
 image_name="${base_name}-${image_revision}"
 
 # this has to match the volume_id in installer_data.json
-ROOTFS_UUID=$(uuidgen)
+ROOTFS_UUID=$(cat /proc/sys/kernel/random/uuid)
 
 if [ "$(whoami)" != 'root' ]; then
     echo "You must be root to run this script."
