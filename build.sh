@@ -68,7 +68,7 @@ mkosi_create_rootfs() {
 
 mount_image() {
     # get last modified image
-    image_path=$(find $image_dir -maxdepth 1 -type d | grep -E "/pipa-fedora43-${mkosi_profile-}[0-9]{8}-[0-9]" | sort | tail -1)
+    image_path=$(find $image_dir -maxdepth 1 -type d | grep -E "/pipa-fedora44-${mkosi_profile-}[0-9]{8}-prerelease-[0-9]" | sort | tail -1)
 
     [[ -z $image_path ]] && echo -n "image not found in $image_dir\nexiting..." && exit
 
