@@ -8,6 +8,8 @@ image_mnt='mnt_image'
 date=$(date +%Y%m%d)
 de_name="${1:-}"
 mkosi_profile=""
+os_release='fedora-44'
+release_type='prerelease'
 
 get_de_name() {
     echo "### Flavor:"
@@ -43,9 +45,29 @@ get_de_name() {
     esac
 }
 
-get_de_name "$de_name"
+get_de_name
 
-image_name=pipa-fedora44-${mkosi_profile}-${date}-prerelease-1
+next_revision() {
+    local base="$1"
+    local max=0
+    local n
+
+    shopt -s nullglob
+    for d in "$image_dir/${base}-"*; do
+        [[ -d "$d" ]] || continue
+        n="${d##*-}"
+        [[ "$n" =~ ^[0-9]+$ ]] || continue
+        (( n > max )) && max="$n"
+    done
+    shopt -u nullglob
+
+    echo $((max + 1))
+}
+
+base_name="pipa-${os_release}-${mkosi_profile}-${date}-${release_type}"
+image_revision="$(next_revision "$base_name")"
+
+image_name="${base_name}-${image_revision}"
 
 # this has to match the volume_id in installer_data.json
 ROOTFS_UUID=$(uuidgen)
@@ -68,7 +90,7 @@ mkosi_create_rootfs() {
 
 mount_image() {
     # get last modified image
-    image_path=$(find $image_dir -maxdepth 1 -type d | grep -E "/pipa-fedora44-${mkosi_profile-}[0-9]{8}-prerelease-[0-9]" | sort | tail -1)
+    image_path=$(find $image_dir -maxdepth 1 -type d | grep -E grep -E "/pipa-${os_release}-${mkosi_profile}-[0-9]{8}-${release_type}-[0-9]+$" | sort | tail -1)
 
     [[ -z $image_path ]] && echo -n "image not found in $image_dir\nexiting..." && exit
 
@@ -105,7 +127,7 @@ make_image() {
 
     ############# create root.img #############
     echo '### Calculating root image size'
-    size=$(du -B M -s --exclude=$mkosi_rootfs/boot $mkosi_rootfs | cut -dM -f1)
+    size=$(du -BM -s --exclude=$mkosi_rootfs/boot $mkosi_rootfs | cut -dM -f1)
     echo "### Root Image size: $size MiB"
     size=$(($size + ($size / 8) + 512))
     echo "### Root Padded size: $size MiB"
@@ -149,9 +171,13 @@ make_image() {
     arch-chroot $image_mnt systemctl enable qbootctl.service bootmac-bluetooth.service tuned.service tuned-ppd.service
     arch-chroot $image_mnt systemctl disable iio-sensor-proxy.service
     echo "### Enabling Desktop services"
-    #if [[ "$mkosi_profile" == "plasma" ]]; then
-        #arch-chroot $image_mnt systemctl enable plasmalogin.service
-    if [[ "$mkosi_profile" == "plasma-mobile" ]]; then
+    case "$mkosi_profile" in
+        "" )   arch-chroot "$image_mnt" systemctl set-default multi-user.target ;;
+        * )    arch-chroot "$image_mnt" systemctl set-default graphical.target ;;
+    esac
+    if [[ "$mkosi_profile" == "plasma" ]]; then
+        arch-chroot $image_mnt systemctl enable --force plasmalogin.service
+    elif [[ "$mkosi_profile" == "plasma-mobile" ]]; then
         arch-chroot $image_mnt systemctl enable --force plasmalogin.service
         arch-chroot $image_mnt systemctl disable sddm.service
     elif [[ "$mkosi_profile" == "niri" ]]; then
@@ -186,7 +212,7 @@ make_image() {
     rm -f  $image_mnt/etc/yum.repos.d/mkosi*.repo
     rm -f  $image_mnt/var/lib/systemd/random-seed
     rm -f $image_mnt/etc/resolv.conf
-    chroot $image_mnt ln -s ../run/systemd/resolve/stub-resolv.conf /etc/resolv.conf
+    arch-chroot $image_mnt ln -s ../run/systemd/resolve/stub-resolv.conf /etc/resolv.conf
 
     echo -e '\n### Copying boot image'
     #echo "### Debug: /boot contents"
