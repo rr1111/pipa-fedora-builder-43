@@ -1,9 +1,8 @@
-# Fedora Linux 43 for Xiaomi Pad 6 (pipa)
+# Fedora Linux 44 for Xiaomi Pad 6 (pipa)
 
 ### This is a fork of [pipa-fedora-builder](https://github.com/timoxa0/pipa-fedora-builder)
 
 ### Features:
-- <strong>System fully updated to Fedora 43</strong>
 - [Pocketblue](https://github.com/pocketblue) ```pocketblue``` & ```sm8250``` COPR repos and packages for more up to date pipa packages
 - [pipa-packages](https://github.com/rr1111/pipa-fedora-packages) COPR repo for more up to date kernel
 
@@ -38,7 +37,6 @@
 - The user password is 147147
 
 - Kernel updates are handled by dnf. Updated boot image will be flashed to the active slot
-- Bluetooth works OOTB with ```bluez-5.84-2.fc43``` which is therefore version locked. If this causes issues with upgrading using dnf, remove the versionlock, upgrade normally, then downgrade bluez again and readd the versionlock.
 
 ### Issues (all flavors):
 - Front camera doesnt work and even though it never did for me, the back one has been reported to work (poorly) by others though
