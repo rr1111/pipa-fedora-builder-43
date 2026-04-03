@@ -12,7 +12,8 @@
 - Minimal Gnome Desktop:
 	- ```gnome-shell-extension-appindicator``` & ```gnome-shell-extension-screen-autorotate``` included
 	
-- Minimal Niri + DMS WM Setup
+- Minimal Niri WM Setup
+	- workaround: run ```dms-install``` to set up dms + dms-greeter
 	
 - Minimal Phosh Desktop 
 	
