@@ -203,8 +203,6 @@ make_image() {
     elif [[ "$mkosi_profile" == "niri" ]]; then
         arch-chroot $image_mnt dms greeter enable
         arch-chroot $image_mnt dms greeter sync
-        echo "### Enabling DMS copr"
-        arch-chroot $image_mnt dnf4 -y copr enable avengemedia/dms
     fi
 
     echo "### Disabling systemd-firstboot"
