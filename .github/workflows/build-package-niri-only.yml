@@ -1,4 +1,4 @@
-name: Build plasma-only install package
+name: Build niri install package
 
 permissions:
   contents: write
