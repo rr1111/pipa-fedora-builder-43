@@ -19,9 +19,6 @@ jobs:
     - name: Build the tty image
       run: docker run --privileged -v "$(pwd)"/images:/build/images -v "/dev:/dev" pipa-fedora-builder tty
 
-    #- name: Build the Phosh image
-    #  run: docker run --privileged -v "$(pwd)"/images:/build/images -v "/dev:/dev" pipa-fedora-builder phosh
-
     - name: Build the Plasma image
       run: docker run --privileged -v "$(pwd)"/images:/build/images -v "/dev:/dev" pipa-fedora-builder plasma
 
@@ -30,9 +27,6 @@ jobs:
 
     - name: Build the Gnome image
       run: docker run --privileged -v "$(pwd)"/images:/build/images -v "/dev:/dev" pipa-fedora-builder gnome
-
-    #- name: Build the Niri image
-    #  run: docker run --privileged -v "$(pwd)"/images:/build/images -v "/dev:/dev" pipa-fedora-builder niri 
 
     - name: Get current date
       id: date
