@@ -202,7 +202,7 @@ make_image() {
         arch-chroot $image_mnt systemctl enable gdm.service
     elif [[ "$mkosi_profile" == "niri" ]]; then
         #dms greeter breaks mkosi its installed afterwards
-        arch-chroot $image_mnt dnf -y install dms-greeter
+        arch-chroot $image_mnt dnf -y install dms dms-greeter
         arch-chroot $image_mnt dms greeter enable
         arch-chroot $image_mnt dms greeter sync
     fi
