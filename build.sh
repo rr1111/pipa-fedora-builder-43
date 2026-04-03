@@ -43,7 +43,6 @@ get_de_name() {
             mkosi_profile="gnome"
             ;;
     esac
-    echo "mkosi_profile='$mkosi_profile'"
 }
 
 get_de_name
@@ -172,8 +171,21 @@ make_image() {
     arch-chroot $image_mnt kernel-install add "$(basename "$kernel_path")" "${kernel_path}/vmlinuz" --verbose
 
     echo "### Enabling system services"
-    arch-chroot $image_mnt systemctl enable NetworkManager.service sshd.service systemd-resolved.service
-    arch-chroot $image_mnt systemctl enable qbootctl.service bootmac-bluetooth.service tuned.service tuned-ppd.service
+    echo "### DEBUG: NetworkManager.service"
+    arch-chroot $image_mnt systemctl enable NetworkManager.service
+    echo "### DEBUG: sshd.service"
+    arch-chroot $image_mnt systemctl enable sshd.service
+    echo "### DEBUG: systemd-resolved.service"
+    arch-chroot $image_mnt systemctl enable systemd-resolved.service
+    echo "### DEBUG: qbootctl.service"
+    arch-chroot $image_mnt systemctl enable qbootctl.service
+    echo "### DEBUG: bootmac-bluetooth.service"
+    arch-chroot $image_mnt systemctl enable bootmac-bluetooth.service
+    echo "### DEBUG: tuned.service"
+    arch-chroot $image_mnt systemctl enable tuned.service
+    echo "### DEBUG: tuned-ppd.service"
+    arch-chroot $image_mnt systemctl enable tuned-ppd.service
+    echo "### DEBUG: iio-sensor-proxy.service"
     arch-chroot $image_mnt systemctl disable iio-sensor-proxy.service
     echo "### Enabling default systemd target"
     if [[ -n "$mkosi_profile" ]]; then
