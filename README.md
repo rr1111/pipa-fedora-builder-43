@@ -12,13 +12,12 @@
 - Minimal Gnome Desktop:
 	- ```gnome-shell-extension-appindicator``` & ```gnome-shell-extension-screen-autorotate``` included
 	
-- ~~Minimal Niri WM Setup~~
-(broken rn, if you care to fix, please do open a PR)
+- Minimal Niri + DMS WM Setup
 	
 - Minimal Phosh Desktop 
-
+	
 - TTY with essentials
- 
+	
 - Common Packages:
 	- ```plymouth``` & ```plymouth-theme-spinner``` for fedora boot & shutdown animations
 	- ```fish``` for a better command line experience, default for ```user```
@@ -58,3 +57,5 @@
 - [nabu-fedora-builder](https://github.com/nik012003/nabu-fedora-builder) original original scripts
 - [Kernel port](https://github.com/pipa-mainline/linux) by adomerle, V1p0ll, Lukapanio, domin746826 and others
 - [Void templates](https://github.com/pipa-mainline/void-pipa) by adomerle
+
+This project is not associated with Fedora Linux or RedHat!
