@@ -1,4 +1,4 @@
-name: Build niri install package
+name: Build tty install package
 
 permissions:
   contents: write
@@ -16,8 +16,8 @@ jobs:
     - name: Build the Docker image
       run: docker build . -t 'pipa-fedora-builder'
 
-    - name: Build the Fedora Niri + DMS image
-      run: docker run --privileged -v "$(pwd)"/images:/build/images -v "/dev:/dev" pipa-fedora-builder niri
+    - name: Build the tty image
+      run: docker run --privileged -v "$(pwd)"/images:/build/images -v "/dev:/dev" pipa-fedora-builder tty
 
     - name: Get current date
       id: date

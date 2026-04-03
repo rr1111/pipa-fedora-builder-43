@@ -32,10 +32,6 @@ get_de_name() {
             echo "### Gnome chosen"
             mkosi_profile="gnome"
             ;;
-        niri)
-            echo "### Niri chosen"
-            mkosi_profile="niri"
-            ;;
         *)
             echo "### Invalid DE: $de_name, defaulting to Gnome ..."
             mkosi_profile="gnome"
