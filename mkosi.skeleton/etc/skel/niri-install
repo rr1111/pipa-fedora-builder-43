@@ -5,6 +5,7 @@ dnf -y copr enable avengemedia/dms
 dnf -y copr enable avengemedia/danklinux
 dnf -y install niri cliphist DankMaterialShell dms-greeter dsearch eog ghostty gnome-keyring gnome-text-editor mako matugen nautilus niri seahorse wl-clipboard xdg-desktop-portal xdg-desktop-portal-gnome xdg-desktop-portal-gtk xwayland-satellite
 # setup dms
+dms setup
 dms greeter enable
 dms greeter sync
 systemctl --user enable --now dms
