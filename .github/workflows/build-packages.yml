@@ -16,8 +16,8 @@ jobs:
     - name: Build the Docker image
       run: docker build . -t 'pipa-fedora-builder'
 
-    - name: Build the Gnome image
-      run: docker run --privileged -v "$(pwd)"/images:/build/images -v "/dev:/dev" pipa-fedora-builder gnome
+    - name: Build the tty image
+      run: docker run --privileged -v "$(pwd)"/images:/build/images -v "/dev:/dev" pipa-fedora-builder tty
 
     #- name: Build the Phosh image
     #  run: docker run --privileged -v "$(pwd)"/images:/build/images -v "/dev:/dev" pipa-fedora-builder phosh
@@ -28,8 +28,8 @@ jobs:
     - name: Build the Plasma Mobile image
       run: docker run --privileged -v "$(pwd)"/images:/build/images -v "/dev:/dev" pipa-fedora-builder plasma-mobile
 
-    - name: Build the tty image
-      run: docker run --privileged -v "$(pwd)"/images:/build/images -v "/dev:/dev" pipa-fedora-builder tty
+    - name: Build the Gnome image
+      run: docker run --privileged -v "$(pwd)"/images:/build/images -v "/dev:/dev" pipa-fedora-builder gnome
 
     #- name: Build the Niri image
     #  run: docker run --privileged -v "$(pwd)"/images:/build/images -v "/dev:/dev" pipa-fedora-builder niri 
