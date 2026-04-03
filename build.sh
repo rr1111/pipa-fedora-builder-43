@@ -200,9 +200,6 @@ make_image() {
         arch-chroot $image_mnt systemctl enable --force plasmalogin.service
     elif [[ "$mkosi_profile" == "gnome" ]]; then
         arch-chroot $image_mnt systemctl enable gdm.service
-    elif [[ "$mkosi_profile" == "niri" ]]; then
-        arch-chroot $image_mnt dms greeter enable
-        arch-chroot $image_mnt dms greeter sync
     fi
 
     echo "### Disabling systemd-firstboot"

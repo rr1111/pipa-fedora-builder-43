@@ -1,0 +1,9 @@
+#!/bin/bash
+[[ $EUID -ne 0 ]] && { echo "### script must be run as root" >&2; exit 1; }
+# install dms
+dnf -y install DankMaterialShell dms-greeter
+# setup dms
+dms greeter enable
+dms greeter sync
+systemctl --user add-wants niri.service dms
+systemctl start greetd
