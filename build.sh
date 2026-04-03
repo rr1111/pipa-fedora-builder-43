@@ -211,6 +211,8 @@ make_image() {
     arch-chroot $image_mnt useradd -m -G audio,video,wheel user
     echo 'user:147147' | arch-chroot $image_mnt chpasswd
     arch-chroot $image_mnt chsh -s /bin/fish user
+    arch-chroot $image_mnt chmod +x /home/user/post-install
+    arch-chroot $image_mnt chmod +x /home/user/niri-install
     
     # echo "### SElinux labeling filesystem"
     # arch-chroot $image_mnt setfiles -F -p -c /etc/selinux/targeted/policy/policy.* -e /proc -e /sys -e /dev /etc/selinux/targeted/contexts/files/file_contexts /
