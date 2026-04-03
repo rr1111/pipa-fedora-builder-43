@@ -43,6 +43,7 @@ get_de_name() {
             mkosi_profile="gnome"
             ;;
     esac
+    echo "mkosi_profile='$mkosi_profile'"
 }
 
 get_de_name
@@ -83,7 +84,11 @@ mkosi_create_rootfs() {
     umount_image
     mkosi clean
     rm -rf .mkosi*
-    mkosi --profile "$mkosi_profile"
+    if [[ -n "$mkosi_profile" ]]; then
+        mkosi --profile "$mkosi_profile"
+    else
+        mkosi
+    fi
     # not sure how/why this directory is being created by mkosi
     rm -rf $mkosi_rootfs/root/pipa-fedora-builder
 }
@@ -171,10 +176,10 @@ make_image() {
     arch-chroot $image_mnt systemctl enable qbootctl.service bootmac-bluetooth.service tuned.service tuned-ppd.service
     arch-chroot $image_mnt systemctl disable iio-sensor-proxy.service
     echo "### Enabling default systemd target"
-    if [[ -z "$mkosi_profile" ]]; then
-        arch-chroot "$image_mnt" systemctl set-default multi-user.target
-    else
+    if [[ -n "$mkosi_profile" ]]; then
         arch-chroot "$image_mnt" systemctl set-default graphical.target
+    else
+        arch-chroot "$image_mnt" systemctl set-default multi-user.target
     fi
     echo "### Enabling Desktop services"
     if [[ "$mkosi_profile" == "plasma" ]]; then
