@@ -35,7 +35,7 @@ get_de_name() {
             mkosi_profile="gnome"
             ;;
         niri)
-            echo "### Niri chosen"
+            echo "### Niri with DMS chosen"
             mkosi_profile="niri"
             ;;
         *)
@@ -201,8 +201,9 @@ make_image() {
     elif [[ "$mkosi_profile" == "gnome" ]]; then
         arch-chroot $image_mnt systemctl enable gdm.service
     elif [[ "$mkosi_profile" == "niri" ]]; then
-        arch-chroot $image_mnt systemctl enable sddm.service
-        arch-chroot $image_mnt systemctl --user add-wants niri.service dms
+        arch-chroot $image_mnt dms greeter enable
+        arch-chroot $image_mnt dms greeter sync
+        echo "### Enabling DMS copr"
         arch-chroot $image_mnt dnf4 -y copr enable avengemedia/dms
     fi
 
