@@ -7,5 +7,6 @@ dnf -y install niri cliphist DankMaterialShell dms-greeter dsearch eog ghostty g
 # setup dms
 dms greeter enable
 dms greeter sync
+systemctl --user enable --now dms
 systemctl --user add-wants niri.service dms
 systemctl start greetd
