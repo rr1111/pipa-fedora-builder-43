@@ -1,4 +1,4 @@
-# Fedora Linux 44 for Xiaomi Pad 6 (pipa)
+# Fedora Linux for Xiaomi Pad 6 (pipa)
 
 ### This is a fork of [pipa-fedora-builder](https://github.com/timoxa0/pipa-fedora-builder)
 
