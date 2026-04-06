@@ -56,6 +56,13 @@
 	- Install [GJS OSK extension](https://github.com/Vishram1123/gjs-osk) to make the Gnome OSK usable (if your enter key gets stuck aswell, remove it)
 	- Install [TouchUP extension](https://github.com/mityax/gnome-extension-touchup) to make the Gnome Shell more usable on a Touchscreen
 
+## Related projects:
+- [postmarketOS](https://wiki.postmarketos.org/wiki/Xiaomi_Pad_6_(xiaomi-pipa)) - pmOS for pipa
+- [void-pipa](https://github.com/pipa-mainline/void-pipa) - Void Linux for pipa (EOL?)
+- [void-linux-pipa](https://github.com/userg0d/void-linux-pipa) - Another Void Linux for pipa
+- [pipa-alarm](https://t.me/pipa_mainline/32978) - alarm (Arch Linux ARM) for pipa
+- [armtix-xiaomi-pipa](https://github.com/Neo10e/armtix-xiaomi-pipa) - ARMtix (Artix Linux ARM) for pipa
+
 ## Credits:
 - [Pocketblue](https://github.com/pocketblue) for COPR Repos, packages & their awesome work
 - [pipa-fedora-builder](https://github.com/timoxa0/pipa-fedora-builder) original scripts this is forked from, by timoxa0 (thanks!!!)
