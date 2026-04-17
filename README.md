@@ -33,6 +33,12 @@
 #### [Installation guide](./INSTALL.md)
 #### [Image building guide](./BUILD.md)
 
+### Kernel Status:
+| Sleep | Speakers | Mic | WLAN | Bluetooth | (Fast) Charging | Battery Status | Hall | Display | Brightness | Touch | GPU | USB (Host/Client) | DP alt mode | UFS | Back Camera | Front Camera | Sensors | Xiaomi Keyboard | Pen |
+| ----------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- |
+| ✅️ | ✅️ | ✅️ | ✅️ | ✅️ | ✅️ (~10w) | ✅️ | ✅️ | ✅️ | ✅️ | ✅️ | ✅️ | ✅️ | ✅️ | ✅️ | ⚠️ (sometimes) | ❌️ | ⚠️ (flaky) | ✅️ | ✅️ |
+
+
 ### User Notes:
 - The root password is **fedora**
 - The user password is 147147
