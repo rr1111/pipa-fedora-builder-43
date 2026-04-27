@@ -26,10 +26,6 @@ get_de_name() {
             echo "### KDE Plasma mobile chosen"
             mkosi_profile="plasma-mobile"
             ;;
-        phosh)
-            echo "### Phosh chosen"
-            mkosi_profile="phosh"
-            ;;
         gnome)
             echo "### Gnome chosen"
             mkosi_profile="gnome"
