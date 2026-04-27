@@ -1,13 +1,3 @@
 #!/bin/bash
-[[ $EUID -ne 0 ]] && { echo "### script must be run as root" >&2; exit 1; }
-# install dms
-dnf -y copr enable avengemedia/dms
-dnf -y copr enable avengemedia/danklinux
-dnf -y install niri cliphist DankMaterialShell dms-greeter dsearch eog ghostty gnome-keyring gnome-text-editor mako matugen nautilus niri seahorse wl-clipboard xdg-desktop-portal xdg-desktop-portal-gnome xdg-desktop-portal-gtk xwayland-satellite
-# setup dms
-dms setup
-dms greeter enable
-dms greeter sync
-systemctl --user enable --now dms
-systemctl --user add-wants niri.service dms
+curl -fsSL https://install.danklinux.com | sh
 systemctl start greetd
