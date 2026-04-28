@@ -1,4 +1,4 @@
-name: Build tty install package
+name: Build tty-only install package
 
 permissions:
   contents: write
