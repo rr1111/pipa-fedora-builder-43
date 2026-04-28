@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-24.04-arm
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6.0.2
 
     - name: Build the Docker image
       run: docker build . -t 'pipa-fedora-builder'
@@ -25,10 +25,10 @@ jobs:
 
     - name: Create Release
       id: create_release
-      uses: softprops/action-gh-release@v2
+      uses: softprops/action-gh-release@v2.6.1
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
-        tag_name: f43-${{ steps.date.outputs.date }}
-        name: Fedora 43 ${{ steps.date.outputs.date }}
+        tag_name: f44-${{ steps.date.outputs.date }}
+        name: Fedora 44 ${{ steps.date.outputs.date }}
         files: images/*.zip
         draft: true

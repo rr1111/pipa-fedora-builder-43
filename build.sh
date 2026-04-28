@@ -8,6 +8,8 @@ image_mnt='mnt_image'
 date=$(date +%Y%m%d)
 de_name="${1:-}"
 mkosi_profile=""
+os_release='fedora-44'
+release_type='prerelease'
 
 get_de_name() {
     echo "### Flavor:"
@@ -24,10 +26,6 @@ get_de_name() {
             echo "### KDE Plasma mobile chosen"
             mkosi_profile="plasma-mobile"
             ;;
-        phosh)
-            echo "### Phosh chosen"
-            mkosi_profile="phosh"
-            ;;
         gnome)
             echo "### Gnome chosen"
             mkosi_profile="gnome"
@@ -39,12 +37,32 @@ get_de_name() {
     esac
 }
 
-get_de_name "$de_name"
+get_de_name
 
-image_name=pipa-fedora43-${mkosi_profile}-${date}-1
+next_revision() {
+    local base="$1"
+    local max=0
+    local n
+
+    shopt -s nullglob
+    for d in "$image_dir/${base}-"*; do
+        [[ -d "$d" ]] || continue
+        n="${d##*-}"
+        [[ "$n" =~ ^[0-9]+$ ]] || continue
+        (( n > max )) && max="$n"
+    done
+    shopt -u nullglob
+
+    echo $((max + 1))
+}
+
+base_name="pipa-${os_release}-${mkosi_profile}-${date}-${release_type}"
+image_revision="$(next_revision "$base_name")"
+
+image_name="${base_name}-${image_revision}"
 
 # this has to match the volume_id in installer_data.json
-ROOTFS_UUID=$(uuidgen)
+ROOTFS_UUID=$(cat /proc/sys/kernel/random/uuid)
 
 if [ "$(whoami)" != 'root' ]; then
     echo "You must be root to run this script."
@@ -57,14 +75,18 @@ mkosi_create_rootfs() {
     umount_image
     mkosi clean
     rm -rf .mkosi*
-    mkosi --profile "$mkosi_profile"
+    if [[ -n "$mkosi_profile" ]]; then
+        mkosi --profile "$mkosi_profile"
+    else
+        mkosi
+    fi
     # not sure how/why this directory is being created by mkosi
     rm -rf $mkosi_rootfs/root/pipa-fedora-builder
 }
 
 mount_image() {
     # get last modified image
-    image_path=$(find $image_dir -maxdepth 1 -type d | grep -E "/pipa-fedora43-${mkosi_profile-}[0-9]{8}-[0-9]" | sort | tail -1)
+    image_path=$(find $image_dir -maxdepth 1 -type d | grep -E "/pipa-${os_release}-${mkosi_profile}-[0-9]{8}-${release_type}-[0-9]+$" | sort | tail -1)
 
     [[ -z $image_path ]] && echo -n "image not found in $image_dir\nexiting..." && exit
 
@@ -101,7 +123,7 @@ make_image() {
 
     ############# create root.img #############
     echo '### Calculating root image size'
-    size=$(du -B M -s --exclude=$mkosi_rootfs/boot $mkosi_rootfs | cut -dM -f1)
+    size=$(du -BM -s --exclude=$mkosi_rootfs/boot $mkosi_rootfs | cut -dM -f1)
     echo "### Root Image size: $size MiB"
     size=$(($size + ($size / 8) + 512))
     echo "### Root Padded size: $size MiB"
@@ -141,19 +163,35 @@ make_image() {
     arch-chroot $image_mnt kernel-install add "$(basename "$kernel_path")" "${kernel_path}/vmlinuz" --verbose
 
     echo "### Enabling system services"
-    arch-chroot $image_mnt systemctl enable NetworkManager.service sshd.service systemd-resolved.service
-    arch-chroot $image_mnt systemctl enable qbootctl.service bootmac-bluetooth.service tuned.service tuned-ppd.service
+    echo "### DEBUG: NetworkManager.service"
+    arch-chroot $image_mnt systemctl enable NetworkManager.service
+    echo "### DEBUG: sshd.service"
+    arch-chroot $image_mnt systemctl enable sshd.service
+    echo "### DEBUG: systemd-resolved.service"
+    arch-chroot $image_mnt systemctl enable systemd-resolved.service
+    echo "### DEBUG: qbootctl.service"
+    arch-chroot $image_mnt systemctl enable qbootctl.service
+    echo "### DEBUG: bootmac-bluetooth.service"
+    arch-chroot $image_mnt systemctl enable bootmac-bluetooth.service
+    echo "### DEBUG: tuned.service"
+    arch-chroot $image_mnt systemctl enable tuned.service
+    echo "### DEBUG: tuned-ppd.service"
+    arch-chroot $image_mnt systemctl enable tuned-ppd.service
+    echo "### DEBUG: iio-sensor-proxy.service"
     arch-chroot $image_mnt systemctl disable iio-sensor-proxy.service
+    echo "### Enabling default systemd target"
+    if [[ -n "$mkosi_profile" ]]; then
+        arch-chroot "$image_mnt" systemctl set-default graphical.target
+    else
+        arch-chroot "$image_mnt" systemctl set-default multi-user.target
+    fi
     echo "### Enabling Desktop services"
     if [[ "$mkosi_profile" == "plasma" ]]; then
-        arch-chroot $image_mnt systemctl enable plasmalogin.service
+        arch-chroot $image_mnt systemctl enable --force plasmalogin.service
     elif [[ "$mkosi_profile" == "plasma-mobile" ]]; then
         arch-chroot $image_mnt systemctl enable --force plasmalogin.service
-        arch-chroot $image_mnt systemctl disable sddm.service
-    elif [[ "$mkosi_profile" == "niri" ]]; then
-        arch-chroot $image_mnt systemctl enable sddm.service
-        arch-chroot $image_mnt systemctl --user add-wants niri.service dms
-        arch-chroot $image_mnt dnf4 -y copr enable avengemedia/dms
+    elif [[ "$mkosi_profile" == "gnome" ]]; then
+        arch-chroot $image_mnt systemctl enable gdm.service
     fi
 
     echo "### Disabling systemd-firstboot"
@@ -169,10 +207,9 @@ make_image() {
     arch-chroot $image_mnt useradd -m -G audio,video,wheel user
     echo 'user:147147' | arch-chroot $image_mnt chpasswd
     arch-chroot $image_mnt chsh -s /bin/fish user
+    arch-chroot $image_mnt chmod +x /home/user/post-install
+    arch-chroot $image_mnt chmod +x /home/user/niri-install
     
-    echo "### Version-locking bluez as newest version breaks bluetooth on pipa"
-    arch-chroot $image_mnt dnf -y versionlock add bluez
-
     # echo "### SElinux labeling filesystem"
     # arch-chroot $image_mnt setfiles -F -p -c /etc/selinux/targeted/policy/policy.* -e /proc -e /sys -e /dev /etc/selinux/targeted/contexts/files/file_contexts /
     # arch-chroot $image_mnt setfiles -F -p -c /etc/selinux/targeted/policy/policy.* -e /proc -e /sys -e /dev /etc/selinux/targeted/contexts/files/file_contexts /boot
@@ -185,7 +222,7 @@ make_image() {
     rm -f  $image_mnt/etc/yum.repos.d/mkosi*.repo
     rm -f  $image_mnt/var/lib/systemd/random-seed
     rm -f $image_mnt/etc/resolv.conf
-    chroot $image_mnt ln -s ../run/systemd/resolve/stub-resolv.conf /etc/resolv.conf
+    arch-chroot $image_mnt ln -s ../run/systemd/resolve/stub-resolv.conf /etc/resolv.conf
 
     echo -e '\n### Copying boot image'
     #echo "### Debug: /boot contents"
