@@ -9,7 +9,7 @@
 
 - TTY with essentials
   - No WM or DE preinstalled
-  - run ```./dms-install``` to install & set up Niri or Hyprland with DankMaterialShell and get started quickly (Keyboard & Internet connection required) 
+  - run ```./niri-install``` to install & set up Niri or Hyprland with DankMaterialShell and get started quickly (Keyboard & Internet connection required) 
 	
 - Common Packages:
 	- ```fish``` for a better command line experience, default for ```user```
