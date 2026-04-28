@@ -1,4 +1,4 @@
-name: Build Editins install packages
+name: Build Editions install packages
 
 permissions:
   contents: write
