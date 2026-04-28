@@ -9,7 +9,7 @@ date=$(date +%Y%m%d)
 de_name="${1:-}"
 mkosi_profile=""
 os_release='fedora-44'
-release_type='prerelease'
+release_type='stable'
 
 get_de_name() {
     echo "### Flavor:"
