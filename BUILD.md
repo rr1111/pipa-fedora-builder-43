@@ -23,9 +23,15 @@ replace ```<desktop-arg>``` with the flavor of your choice:
 
 Remove ```-rm``` if you want to keep the container after running. 
 
-If you dont pass a desktop arg to the container or pass an invalid one, it will default to gnome!
+If you dont pass a desktop arg to the container or pass an invalid one, it will default to ```gnome```!
 
 [Installation guide](./INSTALL.md)
+
+### Building custom images
+- add your packages in mkosi.profiles/custom.conf
+- or use a group like ```@cosmic-desktop-environment```
+- pass ```custom``` as desktop argument
+- see what happens, if all packages properly enable their services, it should work
 
 ### Building Notes
 
