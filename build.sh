@@ -143,7 +143,6 @@ make_image() {
     echo "### Enabling system services"
     arch-chroot $image_mnt systemctl enable NetworkManager.service sshd.service systemd-resolved.service
     arch-chroot $image_mnt systemctl enable qbootctl.service bootmac-bluetooth.service tuned.service tuned-ppd.service
-    arch-chroot $image_mnt systemctl disable iio-sensor-proxy.service
     echo "### Enabling Desktop services"
     if [[ "$mkosi_profile" == "plasma" ]]; then
         arch-chroot $image_mnt systemctl enable plasmalogin.service
