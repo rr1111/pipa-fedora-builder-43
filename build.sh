@@ -30,6 +30,10 @@ get_de_name() {
             echo "### Gnome chosen"
             mkosi_profile="gnome"
             ;;
+        custom)
+            echo "### Custom profile chosen"
+            mkosi_profile="custom"
+            ;;
         *)
             echo "### Invalid DE: $de_name, defaulting to Gnome ..."
             mkosi_profile="gnome"
