@@ -163,23 +163,21 @@ make_image() {
     arch-chroot $image_mnt kernel-install add "$(basename "$kernel_path")" "${kernel_path}/vmlinuz" --verbose
 
     echo "### Enabling system services"
-    echo "### DEBUG: NetworkManager.service"
+    # echo "### DEBUG: NetworkManager.service"
     arch-chroot $image_mnt systemctl enable NetworkManager.service
-    echo "### DEBUG: sshd.service"
+    # echo "### DEBUG: sshd.service"
     arch-chroot $image_mnt systemctl enable sshd.service
-    echo "### DEBUG: systemd-resolved.service"
+    # echo "### DEBUG: systemd-resolved.service"
     arch-chroot $image_mnt systemctl enable systemd-resolved.service
-    echo "### DEBUG: qbootctl.service"
+    # echo "### DEBUG: qbootctl.service"
     arch-chroot $image_mnt systemctl enable qbootctl.service
-    echo "### DEBUG: bootmac-bluetooth.service"
+    # echo "### DEBUG: bootmac-bluetooth.service"
     arch-chroot $image_mnt systemctl enable bootmac-bluetooth.service
-    echo "### DEBUG: tuned.service"
+    # echo "### DEBUG: tuned.service"
     arch-chroot $image_mnt systemctl enable tuned.service
-    echo "### DEBUG: tuned-ppd.service"
+    # echo "### DEBUG: tuned-ppd.service"
     arch-chroot $image_mnt systemctl enable tuned-ppd.service
-    echo "### DEBUG: iio-sensor-proxy.service"
-    arch-chroot $image_mnt systemctl disable iio-sensor-proxy.service
-    echo "### Enabling default systemd target"
+    echo "### Setting default systemd target"
     if [[ -n "$mkosi_profile" ]]; then
         arch-chroot "$image_mnt" systemctl set-default graphical.target
     else
