@@ -26,14 +26,6 @@ get_de_name() {
             echo "### KDE Plasma mobile chosen"
             mkosi_profile="plasma-mobile"
             ;;
-        kde-desktop-env)
-            echo "### Full KDE Plasma Edition chosen"
-            mkosi_profile="plasma-edition"
-            ;;
-        workstation-env)
-            echo "### Full Workstation Edition chosen"
-            mkosi_profile="workstation"
-            ;;
         gnome)
             echo "### Gnome chosen"
             mkosi_profile="gnome"
