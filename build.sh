@@ -35,8 +35,8 @@ get_de_name() {
             mkosi_profile="custom"
             ;;
         *)
-            echo "### Invalid DE: $de_name, defaulting to Gnome ..."
-            mkosi_profile="gnome"
+            echo "### Invalid DE: $de_name, defaulting to KDE Plasma ..."
+            mkosi_profile="plasma"
             ;;
     esac
 }
