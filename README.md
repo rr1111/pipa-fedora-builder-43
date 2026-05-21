@@ -37,6 +37,7 @@
 
 ### Tips and Tricks:
 - Run ```widevine-installer``` to install the Widevinde CDM for Firefox and Chromium based browsers, works for system packages only. **(The widevine CDM module is not altered in any way, nor is it preinstalled or distributed by me)**
+- Visit [Pipa Linux Wiki](https://rr1111.github.io/pipa-linux-wiki) for more & general Info
 - KDE Flavors: 
 	- Apply the screen rotation to plasmalogin in Settings -> Login Screen -> Apply Plasma Settings...
 - Gnome Flavor:
