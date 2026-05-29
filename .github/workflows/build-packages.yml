@@ -38,16 +38,16 @@ jobs:
         docker push "${{ env.IMAGE_NAME }}:${{ github.sha }}"
 
     - name: Build the tty image
-      run: docker run --privileged -v "$(pwd)"/images:/build/images -v "/dev:/dev" pipa-fedora-builder tty
+      run: docker run --privileged -v "$(pwd)"/images:/build/images -v "/dev:/dev" pipa-fedora-builder-43 tty
 
     - name: Build the Plasma image
-      run: docker run --privileged -v "$(pwd)"/images:/build/images -v "/dev:/dev" pipa-fedora-builder plasma
+      run: docker run --privileged -v "$(pwd)"/images:/build/images -v "/dev:/dev" pipa-fedora-builder-43 plasma
 
     - name: Build the Plasma Mobile image
-      run: docker run --privileged -v "$(pwd)"/images:/build/images -v "/dev:/dev" pipa-fedora-builder plasma-mobile
+      run: docker run --privileged -v "$(pwd)"/images:/build/images -v "/dev:/dev" pipa-fedora-builder-43 plasma-mobile
 
     - name: Build the Gnome image
-      run: docker run --privileged -v "$(pwd)"/images:/build/images -v "/dev:/dev" pipa-fedora-builder gnome
+      run: docker run --privileged -v "$(pwd)"/images:/build/images -v "/dev:/dev" pipa-fedora-builder-43 gnome
 
     - name: Get current date
       id: date
