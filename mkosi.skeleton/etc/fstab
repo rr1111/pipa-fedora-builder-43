@@ -2,3 +2,5 @@
 #
 # <file system>               <mount point> <type>  <options>                         <dump>  <pass>
 UUID=ROOTFS_UUID_PLACEHOLDER  /             ext4    defaults,errors=remount-ro,x-systemd.growfs  0 0
+UUID=BOOT_UUID_PLACEHOLDER    /boot         ext4    defaults,errors=remount-ro                   0 2
+UUID=ESP_UUID_PLACEHOLDER     /boot/efi     vfat    umask=0077,shortname=winnt                   0 2

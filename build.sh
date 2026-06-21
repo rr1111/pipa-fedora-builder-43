@@ -43,37 +43,25 @@ get_de_name() {
 
 get_de_name
 
-next_revision() {
-    local base="$1"
-    local max=0
-    local n
+image_name="pipa-${os_release}-${mkosi_profile}-${date}-${release_type}"
 
-    shopt -s nullglob
-    for d in "$image_dir/${base}-"*; do
-        [[ -d "$d" ]] || continue
-        n="${d##*-}"
-        [[ "$n" =~ ^[0-9]+$ ]] || continue
-        (( n > max )) && max="$n"
-    done
-    shopt -u nullglob
-
-    echo $((max + 1))
-}
-
-base_name="pipa-${os_release}-${mkosi_profile}-${date}-${release_type}"
-image_revision="$(next_revision "$base_name")"
-
-image_name="${base_name}-${image_revision}"
+ROOT_IMG="$image_dir/$image_name/fedora_rootfs.raw"
+BOOT_IMG="$image_dir/$image_name/fedora_boot.raw"
+ESP_IMG="$image_dir/$image_name/fedora_esp.raw"
 
 # this has to match the volume_id in installer_data.json
 ROOTFS_UUID=$(cat /proc/sys/kernel/random/uuid)
+BOOT_UUID=$(cat /proc/sys/kernel/random/uuid)
+ESP_UUID=$(hexdump -n 4 -e '4/1 "%02X"' /dev/urandom)
+
+GRUB_EFI_SOURCE="$image_dir/$image_name/grubaa64.efi"
 
 if [ "$(whoami)" != 'root' ]; then
     echo "You must be root to run this script."
     exit 1
 fi
 
-mkdir -p "$image_mnt" "$mkosi_rootfs" "$image_dir/$image_name"
+mkdir -p "$image_mnt" "$image_mnt/bootimg" "$image_mnt/esp" "$mkosi_rootfs" "$image_dir/$image_name"
 
 mkosi_create_rootfs() {
     umount_image
@@ -90,11 +78,11 @@ mkosi_create_rootfs() {
 
 mount_image() {
     # get last modified image
-    image_path=$(find $image_dir -maxdepth 1 -type d | grep -E "/pipa-${os_release}-${mkosi_profile}-[0-9]{8}-${release_type}-[0-9]+$" | sort | tail -1)
+    image_path=$(find $image_dir -maxdepth 1 -type d | grep -E "/pipa-${os_release}-${mkosi_profile}-[0-9]{8}-${release_type}" | sort | tail -1)
 
     [[ -z $image_path ]] && echo -n "image not found in $image_dir\nexiting..." && exit
 
-    [[ -z "$(findmnt -n $image_mnt)" ]] && mount -o loop "$image_path"/root.img $image_mnt
+    [[ -z "$(findmnt -n $image_mnt)" ]] && mount -o loop "$image_path"/fedora_rootfs.raw $image_mnt
 }
 
 umount_image() {
@@ -117,42 +105,118 @@ elif [[ $1 == 'umount' ]] || [[ $1 == 'unmount' ]]; then
     exit
 fi
 
+mkdir -p "$image_mnt/check"
+
+verify_images() {
+    echo '### Verifying generated images'
+
+    [[ -f "$ROOT_IMG" ]] || { echo "ERROR: missing $ROOT_IMG"; exit 1; }
+    [[ -f "$BOOT_IMG" ]] || { echo "ERROR: missing $BOOT_IMG"; exit 1; }
+    [[ -f "$ESP_IMG" ]] || { echo "ERROR: missing $ESP_IMG"; exit 1; }
+    [[ -f "$GRUB_EFI_SOURCE" ]] || { echo "ERROR: missing $GRUB_EFI_SOURCE"; exit 1; }
+
+    mount -o loop "$BOOT_IMG" "$image_mnt/check"
+    [[ -f "$image_mnt/check/grub2/grub.cfg" ]] || { echo "ERROR: missing /grub2/grub.cfg in boot image"; umount "$image_mnt/check"; exit 1; }
+    umount "$image_mnt/check"
+
+    mount -o loop "$ESP_IMG" "$image_mnt/check"
+    [[ -f "$image_mnt/check/EFI/BOOT/BOOTAA64.EFI" ]] || { echo "ERROR: missing /EFI/BOOT/BOOTAA64.EFI in ESP"; umount "$image_mnt/check"; exit 1; }
+    umount "$image_mnt/check"
+}
+
+
+make_boot_image() {
+    echo '### Calculating boot image size'
+    local boot_size
+    boot_size=$(du -BM -s "$mkosi_rootfs/boot" | cut -dM -f1)
+    echo "### Boot Image size: $boot_size MiB"
+    boot_size=$((boot_size + (boot_size / 4) + 256))
+    echo "### Boot Padded size: $boot_size MiB"
+
+    truncate -s "${boot_size}M" "$BOOT_IMG"
+
+    echo '### Creating boot ext4 filesystem on fedora_boot.raw'
+    MKE2FS_DEVICE_PHYS_SECTSIZE=4096 MKE2FS_DEVICE_SECTSIZE=4096 mkfs.ext4 -U "$BOOT_UUID" -L 'fedora_boot' "$BOOT_IMG"
+
+    echo '### Loop mounting boot image'
+    mount -o loop "$BOOT_IMG" "$image_mnt/bootimg"
+
+    echo '### Copying /boot contents'
+    rsync -aHAX --exclude '/efi/*' "$mkosi_rootfs/boot/" "$image_mnt/bootimg/"
+
+    echo '### Cleaning boot image'
+    rm -rf "$image_mnt/bootimg/lost+found"
+    rm -f "$image_mnt/bootimg/.keep"
+
+    umount "$image_mnt/bootimg"
+}
+
+make_esp_image() {
+    echo '### Creating FAT16 ESP image'
+    local esp_size=64
+
+    truncate -s "${esp_size}M" "$ESP_IMG"
+
+    mkfs.vfat -F 16 -n 'PIPAESP' -i "$ESP_UUID" "$ESP_IMG"
+
+    echo '### Loop mounting ESP image'
+    mount -o loop "$ESP_IMG" "$image_mnt/esp"
+
+    mkdir -p "$image_mnt/esp/EFI/BOOT"
+    mkdir -p "$image_mnt/esp/EFI/fedora"
+
+    echo '### Copying GRUB binary'
+    cp "$GRUB_EFI_SOURCE" "$image_mnt/esp/EFI/BOOT/BOOTAA64.EFI"
+    cp "$GRUB_EFI_SOURCE" "$image_mnt/esp/EFI/fedora/grubaa64.efi"
+
+    echo '### Copying ESP GRUB stub config'
+    cp "$mkosi_rootfs/boot/efi/EFI/fedora/grub.cfg" "$image_mnt/esp/EFI/fedora/grub.cfg"
+    cp "$mkosi_rootfs/boot/efi/EFI/BOOT/grub.cfg" "$image_mnt/esp/EFI/BOOT/grub.cfg"
+
+    umount "$image_mnt/esp"
+}
+
+
 make_image() {
     # if  $image_mnt is mounted, then unmount it
     umount_image
     echo "## Making image $image_name"
     echo '### Cleaning up'
     rm -rf $mkosi_rootfs/var/cache/dnf/*
-    rm -rf "$image_dir/$image_name/*"
+    rm -rf "$image_dir/$image_name"/*
 
     ############# create root.img #############
     echo '### Calculating root image size'
-    size=$(du -BM -s --exclude=$mkosi_rootfs/boot $mkosi_rootfs | cut -dM -f1)
+    size=$(du -BM -s --exclude='boot' $mkosi_rootfs | cut -dM -f1)
     echo "### Root Image size: $size MiB"
     size=$(($size + ($size / 8) + 512))
     echo "### Root Padded size: $size MiB"
-    truncate -s ${size}M "$image_dir/$image_name/root.img"
+    truncate -s ${size}M "$ROOT_IMG"
 
     ###### create rootfs filesystem on root.img ######
     echo '### Creating rootfs ext4 filesystem on root.img '
-    MKE2FS_DEVICE_PHYS_SECTSIZE=4096 MKE2FS_DEVICE_SECTSIZE=4096 mkfs.ext4 -U "$ROOTFS_UUID" -L 'fedora_pipa' "$image_dir/$image_name/root.img"
+    MKE2FS_DEVICE_PHYS_SECTSIZE=4096 MKE2FS_DEVICE_SECTSIZE=4096 mkfs.ext4 -U "$ROOTFS_UUID" -L 'fedora_pipa' "$ROOT_IMG"
 
     echo '### Loop mounting root.img'
-    mount -o loop "$image_dir/$image_name/root.img" "$image_mnt"
+    mount -o loop "$ROOT_IMG" "$image_mnt"
     
     echo '### Copying files'
-    rsync -aHAX --exclude '/tmp/*' --exclude '/boot/efi' --exclude '/efi' --exclude '/home/*' $mkosi_rootfs/ $image_mnt
+    rsync -aHAX --exclude '/tmp/*' --exclude '/boot/*' --exclude '/efi/*' --exclude '/home/*' $mkosi_rootfs/ $image_mnt
     # this should be empty, but just in case
     rsync -aHAX $mkosi_rootfs/home/ $image_mnt/home
     umount $image_mnt
     echo '### Loop mounting rootfs root subvolume'
-    mount -o loop "$image_dir/$image_name/root.img" "$image_mnt"
+    mount -o loop "$ROOT_IMG" "$image_mnt"
 
-    # echo '### Setting uuid for rootfs partition in /etc/fstab'
+    # echo '### Setting uuid for partitions in /etc/fstab'
     sed -i "s/ROOTFS_UUID_PLACEHOLDER/$ROOTFS_UUID/" "$image_mnt/etc/fstab"
+    sed -i "s/BOOT_UUID_PLACEHOLDER/$BOOT_UUID/g" "$image_mnt/etc/fstab"
+    sed -i "s/ESP_UUID_PLACEHOLDER/$ESP_UUID/g" "$image_mnt/etc/fstab"
 
-    # echo '### Setting uuid for rootfs partition in /etc/cmdline'
+    # echo '### Setting uuid for partitions in /etc/cmdline'
     sed -i "s/ROOTFS_UUID_PLACEHOLDER/$ROOTFS_UUID/" "$image_mnt/etc/cmdline"
+    CMDLINE=$(tr -d '\n' < "$image_mnt/etc/cmdline")
+    sed -i "s|^GRUB_CMDLINE_LINUX=.*|GRUB_CMDLINE_LINUX=\"$CMDLINE\"|" "$image_mnt/etc/default/grub"
 
     # remove resolv.conf symlink -- this causes issues with arch-chroot
     rm -f $image_mnt/etc/resolv.conf
@@ -161,10 +225,24 @@ make_image() {
     echo -e '\n### Generating Initramfs'
     arch-chroot $image_mnt dracut --force --regenerate-all --verbose
 
+    # Remove Kernel flasher hook
+    rm -f "$image_mnt"/usr/lib/kernel/install.d/99-android-boot.install
+
+
     # Dirty patch: reinstalling kernel
     echo '### Reinstalling kernel'
     local kernel_path="$(arch-chroot $image_mnt bash -c 'find /usr/lib/modules/* -maxdepth 0 -type d')"
     arch-chroot $image_mnt kernel-install add "$(basename "$kernel_path")" "${kernel_path}/vmlinuz" --verbose
+
+    echo "### Generating GRUB config"
+    arch-chroot "$image_mnt" grub2-mkconfig -o /boot/grub2/grub.cfg
+
+    echo "### Building monolithic GRUB EFI binary"
+    mkdir -p "$image_mnt/usr/lib/grub/arm64-efi/monolithic"
+
+    arch-chroot "$image_mnt" grub2-mkimage -O arm64-efi -o /usr/lib/grub/arm64-efi/monolithic/grubaa64.efi -p /EFI/fedora part_gpt fat ext2 normal linux search search_fs_uuid search_label configfile echo test probe regexp minicmd
+
+    cp "$image_mnt/usr/lib/grub/arm64-efi/monolithic/grubaa64.efi" "$GRUB_EFI_SOURCE"
 
     echo "### Enabling system services"
     # echo "### DEBUG: NetworkManager.service"
@@ -211,7 +289,7 @@ make_image() {
     arch-chroot $image_mnt chsh -s /bin/fish user
     arch-chroot $image_mnt chmod +x /home/user/post-install
     arch-chroot $image_mnt chmod +x /home/user/niri-install
-    
+
     # echo "### SElinux labeling filesystem"
     # arch-chroot $image_mnt setfiles -F -p -c /etc/selinux/targeted/policy/policy.* -e /proc -e /sys -e /dev /etc/selinux/targeted/contexts/files/file_contexts /
     # arch-chroot $image_mnt setfiles -F -p -c /etc/selinux/targeted/policy/policy.* -e /proc -e /sys -e /dev /etc/selinux/targeted/contexts/files/file_contexts /boot
@@ -219,21 +297,26 @@ make_image() {
     ###### post-install cleanup ######
     echo -e '\n### Cleanup'
     rm -rf $image_mnt/boot/lost+found/
-    rm -f  $image_mnt/etc/kernel/{entry-token,install.conf}
-    rm -f  $image_mnt/etc/dracut.conf.d/initial-boot.conf
-    rm -f  $image_mnt/etc/yum.repos.d/mkosi*.repo
-    rm -f  $image_mnt/var/lib/systemd/random-seed
+    rm -f $image_mnt/boot/boot*.img
+    rm -f $image_mnt/boot/*-dtb
+    rm -f $image_mnt/etc/kernel/{entry-token,install.conf}
+    rm -f $image_mnt/etc/dracut.conf.d/initial-boot.conf
+    rm -f $image_mnt/etc/yum.repos.d/mkosi*.repo
+    rm -f $image_mnt/var/lib/systemd/random-seed
     rm -f $image_mnt/etc/resolv.conf
     arch-chroot $image_mnt ln -s ../run/systemd/resolve/stub-resolv.conf /etc/resolv.conf
 
-    echo -e '\n### Copying boot image'
-    #echo "### Debug: /boot contents"
-    #ls -lah "$image_mnt/boot"
-
-    cp $image_mnt/boot/boot*.img $image_dir/$image_name/boot.img
-
     echo -e '\n### Unmounting rootfs subvolumes'
     umount $image_mnt
+
+    echo -e '\n### Creating ESP image'
+    make_esp_image
+
+    echo -e '\n### Creating boot image'
+    make_boot_image
+
+    echo -e '\n### Verifying images'
+    verify_images
 
     echo -e '\n### Compressing'
     rm -f $image_dir/"$image_name".zip
