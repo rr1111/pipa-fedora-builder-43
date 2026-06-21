@@ -124,13 +124,12 @@ verify_images() {
     umount "$image_mnt/check"
 }
 
-
 make_boot_image() {
     echo '### Calculating boot image size'
     local boot_size
     boot_size=$(du -BM -s "$mkosi_rootfs/boot" | cut -dM -f1)
     echo "### Boot Image size: $boot_size MiB"
-    boot_size=$((boot_size + (boot_size / 4) + 256))
+    boot_size=$((boot_size + (boot_size / 4) + 512))
     echo "### Boot Padded size: $boot_size MiB"
 
     truncate -s "${boot_size}M" "$BOOT_IMG"
@@ -141,8 +140,10 @@ make_boot_image() {
     echo '### Loop mounting boot image'
     mount -o loop "$BOOT_IMG" "$image_mnt/bootimg"
 
-    echo '### Copying /boot contents'
-    rsync -aHAX --exclude '/efi/*' "$mkosi_rootfs/boot/" "$image_mnt/bootimg/"
+    echo '### Copying /boot contents from root image'
+    mount -o loop "$ROOT_IMG" "$image_mnt"
+    rsync -aHAX --exclude '/efi/*' "$image_mnt/boot/" "$image_mnt/bootimg/"
+    umount "$image_mnt"
 
     echo '### Cleaning boot image'
     rm -rf "$image_mnt/bootimg/lost+found"
@@ -170,8 +171,10 @@ make_esp_image() {
     cp "$GRUB_EFI_SOURCE" "$image_mnt/esp/EFI/fedora/grubaa64.efi"
 
     echo '### Copying ESP GRUB stub config'
-    cp "$mkosi_rootfs/boot/efi/EFI/fedora/grub.cfg" "$image_mnt/esp/EFI/fedora/grub.cfg"
-    cp "$mkosi_rootfs/boot/efi/EFI/BOOT/grub.cfg" "$image_mnt/esp/EFI/BOOT/grub.cfg"
+    mount -o loop "$ROOT_IMG" "$image_mnt"
+    cp "$image_mnt/boot/efi/EFI/fedora/grub.cfg" "$image_mnt/esp/EFI/fedora/grub.cfg"
+    cp "$image_mnt/boot/efi/EFI/BOOT/grub.cfg" "$image_mnt/esp/EFI/BOOT/grub.cfg"
+    umount "$image_mnt"
 
     umount "$image_mnt/esp"
 }
@@ -201,7 +204,7 @@ make_image() {
     mount -o loop "$ROOT_IMG" "$image_mnt"
     
     echo '### Copying files'
-    rsync -aHAX --exclude '/tmp/*' --exclude '/boot/*' --exclude '/efi/*' --exclude '/home/*' $mkosi_rootfs/ $image_mnt
+    rsync -aHAX --exclude '/tmp/*' --exclude '/efi/*' --exclude '/home/*' $mkosi_rootfs/ $image_mnt
     # this should be empty, but just in case
     rsync -aHAX $mkosi_rootfs/home/ $image_mnt/home
     umount $image_mnt
@@ -314,6 +317,12 @@ make_image() {
 
     echo -e '\n### Creating boot image'
     make_boot_image
+
+    echo -e '\n### Removing /boot from root image'
+    mount -o loop "$ROOT_IMG" "$image_mnt"
+    rm -rf "$image_mnt/boot"/*
+    umount "$image_mnt"
+
 
     echo -e '\n### Verifying images'
     verify_images
