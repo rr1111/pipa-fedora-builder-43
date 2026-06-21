@@ -61,7 +61,7 @@ if [ "$(whoami)" != 'root' ]; then
     exit 1
 fi
 
-mkdir -p "$image_mnt" "$image_mnt/bootimg" "$image_mnt/esp" "$mkosi_rootfs" "$image_dir/$image_name"
+mkdir -p "$image_mnt" "$image_mnt/bootimg" "$image_mnt/esp" "$image_mnt/tmp" "$mkosi_rootfs" "$image_dir/$image_name"
 
 mkosi_create_rootfs() {
     umount_image
@@ -141,9 +141,9 @@ make_boot_image() {
     mount -o loop "$BOOT_IMG" "$image_mnt/bootimg"
 
     echo '### Copying /boot contents from root image'
-    mount -o loop "$ROOT_IMG" "$image_mnt"
+    mount -o loop "$ROOT_IMG" "$image_mnt/tmp"
     rsync -aHAX --exclude '/efi/*' "$image_mnt/boot/" "$image_mnt/bootimg/"
-    umount "$image_mnt"
+    umount "$image_mnt/tmp"
 
     echo '### Cleaning boot image'
     rm -rf "$image_mnt/bootimg/lost+found"
@@ -171,10 +171,10 @@ make_esp_image() {
     cp "$GRUB_EFI_SOURCE" "$image_mnt/esp/EFI/fedora/grubaa64.efi"
 
     echo '### Copying ESP GRUB stub config'
-    mount -o loop "$ROOT_IMG" "$image_mnt"
+    mount -o loop "$ROOT_IMG" "$image_mnt/tmp"
     cp "$image_mnt/boot/efi/EFI/fedora/grub.cfg" "$image_mnt/esp/EFI/fedora/grub.cfg"
     cp "$image_mnt/boot/efi/EFI/BOOT/grub.cfg" "$image_mnt/esp/EFI/BOOT/grub.cfg"
-    umount "$image_mnt"
+    umount "$image_mnt/tmp"
 
     umount "$image_mnt/esp"
 }
