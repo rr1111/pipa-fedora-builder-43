@@ -240,6 +240,40 @@ make_image() {
     echo "### Generating GRUB config"
     arch-chroot "$image_mnt" grub2-mkconfig -o /boot/grub2/grub.cfg
 
+    mkdir -p "$image_mnt/boot/efi/EFI/fedora"
+    mkdir -p "$image_mnt/boot/efi/EFI/BOOT"
+
+    cat > "$image_mnt/boot/efi/EFI/fedora/bootuuid.cfg" <<EOF
+    set BOOT_UUID="$BOOT_UUID"
+EOF
+
+    cat > "$image_mnt/boot/efi/EFI/fedora/grub.cfg" <<'EOF'
+    if [ -e (md/md-boot) ]; then
+        set prefix=md/md-boot
+    else
+        if [ -f ${config_directory}/bootuuid.cfg ]; then
+            source ${config_directory}/bootuuid.cfg
+        fi
+        if [ -n "${BOOT_UUID}" ]; then
+            search --fs-uuid "${BOOT_UUID}" --set prefix --no-floppy
+        else
+            search --label fedora_boot --set prefix --no-floppy
+        fi
+    fi
+    if [ -d ($prefix)/grub2 ]; then
+        set prefix=($prefix)/grub2
+        configfile $prefix/grub.cfg
+    else
+        set prefix=($prefix)/boot/grub2
+        configfile $prefix/grub.cfg
+    fi
+    boot
+EOF
+
+    cp "$image_mnt/boot/efi/EFI/fedora/grub.cfg" "$image_mnt/boot/efi/EFI/BOOT/grub.cfg"
+    printf 'grubaa64.efi,Fedora,,Fedora\r\n' > "$image_mnt/boot/efi/EFI/fedora/BOOTAA64.CSV"
+
+
     echo "### Building monolithic GRUB EFI binary"
     mkdir -p "$image_mnt/usr/lib/grub/arm64-efi/monolithic"
 
