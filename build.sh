@@ -218,8 +218,8 @@ make_image() {
     echo -e '\n### Creating ESP image'
     make_esp_image
 
-    arch-chroot "$image_mnt" dnf -y reinstall grub2-efi-aa64 shim-aa64 grub2-common
-
+    echo "### Populating ESP"
+    arch-chroot "$image_mnt" grub2-install --target=arm64-efi --efi-directory=/boot/efi --bootloader-id=fedora
 
     echo "### Generating GRUB config"
     arch-chroot "$image_mnt" grub2-mkconfig -o /boot/grub2/grub.cfg
