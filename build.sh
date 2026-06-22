@@ -122,7 +122,7 @@ make_boot_image() {
     local boot_size
     boot_size=$(du -BM -s "$mkosi_rootfs/boot" | cut -dM -f1)
     echo "### Boot Image size: $boot_size MiB"
-    boot_size=$((boot_size + (boot_size / 4) + 512))
+    boot_size=$((boot_size + (boot_size / 4) + 64))
     echo "### Boot Padded size: $boot_size MiB"
 
     truncate -s "${boot_size}M" "$BOOT_IMG"
@@ -170,7 +170,7 @@ make_image() {
     echo '### Calculating root image size'
     size=$(du -BM -s --exclude='boot' $mkosi_rootfs | cut -dM -f1)
     echo "### Root Image size: $size MiB"
-    size=$(($size + ($size / 8) + 512))
+    size=$(($size + ($size / 8) + 256))
     echo "### Root Padded size: $size MiB"
     truncate -s ${size}M "$ROOT_IMG"
 
@@ -302,11 +302,14 @@ make_image() {
     echo -e '\n### Verifying images'
     verify_images
 
+    echo -e '\n### Shrinkin root img'
+    e2fsck -fy "$ROOT_IMG"
+    resize2fs -M "$ROOT_IMG"
+
     echo -e '\n### Compressing'
-    rm -f $image_dir/"$image_name".zip
-    pushd $image_dir/"$image_name" > /dev/null
-    zip -r ../"$image_name".zip .
-    popd > /dev/null
+    rm -f "$image_dir/$image_name.tar.zst"
+    tar -C "$image_dir" -cf - "$image_name" | zstd -19 -T0 -o "$image_dir/$image_name.tar.zst"
+
 
     echo '### Done'
 }
