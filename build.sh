@@ -219,7 +219,7 @@ make_image() {
     make_esp_image
 
     echo "### Populating ESP"
-    arch-chroot "$image_mnt" grub2-install --target=arm64-efi --efi-directory=/boot/efi --bootloader-id=fedora --force
+    arch-chroot "$image_mnt" grub2-install --target=arm64-efi --efi-directory=/boot/efi --bootloader-id=fedora --force --no-nvram
 
     echo "### Generating GRUB config"
     arch-chroot "$image_mnt" grub2-mkconfig -o /boot/grub2/grub.cfg
