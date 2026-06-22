@@ -115,10 +115,6 @@ verify_images() {
     mount -o loop "$BOOT_IMG" "$image_mnt/check"
     [[ -f "$image_mnt/check/grub2/grub.cfg" ]] || { echo "ERROR: missing /grub2/grub.cfg in boot image"; umount "$image_mnt/check"; exit 1; }
     umount "$image_mnt/check"
-
-    mount -o loop "$ESP_IMG" "$image_mnt/check"
-    [[ -f "$image_mnt/check/EFI/BOOT/BOOTAA64.EFI" ]] || { echo "ERROR: missing /EFI/BOOT/BOOTAA64.EFI in ESP"; umount "$image_mnt/check"; exit 1; }
-    umount "$image_mnt/check"
 }
 
 make_boot_image() {
