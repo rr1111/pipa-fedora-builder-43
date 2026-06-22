@@ -54,8 +54,6 @@ ROOTFS_UUID=$(cat /proc/sys/kernel/random/uuid)
 BOOT_UUID=$(cat /proc/sys/kernel/random/uuid)
 ESP_UUID=$(hexdump -n 4 -e '4/1 "%02X"' /dev/urandom)
 
-GRUB_EFI_SOURCE="$image_dir/$image_name/grubaa64.efi"
-
 if [ "$(whoami)" != 'root' ]; then
     echo "You must be root to run this script."
     exit 1
@@ -113,7 +111,6 @@ verify_images() {
     [[ -f "$ROOT_IMG" ]] || { echo "ERROR: missing $ROOT_IMG"; exit 1; }
     [[ -f "$BOOT_IMG" ]] || { echo "ERROR: missing $BOOT_IMG"; exit 1; }
     [[ -f "$ESP_IMG" ]] || { echo "ERROR: missing $ESP_IMG"; exit 1; }
-    [[ -f "$GRUB_EFI_SOURCE" ]] || { echo "ERROR: missing $GRUB_EFI_SOURCE"; exit 1; }
 
     mount -o loop "$BOOT_IMG" "$image_mnt/check"
     [[ -f "$image_mnt/check/grub2/grub.cfg" ]] || { echo "ERROR: missing /grub2/grub.cfg in boot image"; umount "$image_mnt/check"; exit 1; }
