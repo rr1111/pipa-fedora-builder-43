@@ -157,28 +157,13 @@ make_esp_image() {
     local esp_size=64
 
     truncate -s "${esp_size}M" "$ESP_IMG"
-
     mkfs.vfat -F 16 -n 'PIPAESP' -i "$ESP_UUID" "$ESP_IMG"
 
-    echo '### Loop mounting ESP image'
-    mount -o loop "$ESP_IMG" "$image_mnt/esp"
+    mkdir -p "$image_mnt/boot/efi"
 
-    mkdir -p "$image_mnt/esp/EFI/BOOT"
-    mkdir -p "$image_mnt/esp/EFI/fedora"
-
-    echo '### Copying GRUB binary'
-    cp "$GRUB_EFI_SOURCE" "$image_mnt/esp/EFI/BOOT/BOOTAA64.EFI"
-    cp "$GRUB_EFI_SOURCE" "$image_mnt/esp/EFI/fedora/grubaa64.efi"
-
-    echo '### Copying ESP GRUB stub config'
-    mount -o loop "$ROOT_IMG" "$image_mnt/tmp"
-    cp "$image_mnt/tmp/boot/efi/EFI/fedora/grub.cfg" "$image_mnt/esp/EFI/fedora/grub.cfg"
-    cp "$image_mnt/tmp/boot/efi/EFI/BOOT/grub.cfg" "$image_mnt/esp/EFI/BOOT/grub.cfg"
-    umount "$image_mnt/tmp"
-
-    umount "$image_mnt/esp"
+    echo '### Loop mounting ESP image at /boot/efi'
+    mount -o loop "$ESP_IMG" "$image_mnt/boot/efi"
 }
-
 
 make_image() {
     # if  $image_mnt is mounted, then unmount it
@@ -237,49 +222,14 @@ make_image() {
     local kernel_path="$(arch-chroot $image_mnt bash -c 'find /usr/lib/modules/* -maxdepth 0 -type d')"
     arch-chroot $image_mnt kernel-install add "$(basename "$kernel_path")" "${kernel_path}/vmlinuz" --verbose
 
+    echo -e '\n### Creating ESP image'
+    make_esp_image
+
+    arch-chroot "$image_mnt" dnf -y reinstall grub2-efi-aa64 shim-aa64 grub2-common
+
+
     echo "### Generating GRUB config"
     arch-chroot "$image_mnt" grub2-mkconfig -o /boot/grub2/grub.cfg
-
-    mkdir -p "$image_mnt/boot/efi/EFI/fedora"
-    mkdir -p "$image_mnt/boot/efi/EFI/BOOT"
-
-    cat > "$image_mnt/boot/efi/EFI/fedora/bootuuid.cfg" <<EOF
-    set BOOT_UUID="$BOOT_UUID"
-EOF
-
-    cat > "$image_mnt/boot/efi/EFI/fedora/grub.cfg" <<'EOF'
-    if [ -e (md/md-boot) ]; then
-        set prefix=md/md-boot
-    else
-        if [ -f ${config_directory}/bootuuid.cfg ]; then
-            source ${config_directory}/bootuuid.cfg
-        fi
-        if [ -n "${BOOT_UUID}" ]; then
-            search --fs-uuid "${BOOT_UUID}" --set prefix --no-floppy
-        else
-            search --label fedora_boot --set prefix --no-floppy
-        fi
-    fi
-    if [ -d ($prefix)/grub2 ]; then
-        set prefix=($prefix)/grub2
-        configfile $prefix/grub.cfg
-    else
-        set prefix=($prefix)/boot/grub2
-        configfile $prefix/grub.cfg
-    fi
-    boot
-EOF
-
-    cp "$image_mnt/boot/efi/EFI/fedora/grub.cfg" "$image_mnt/boot/efi/EFI/BOOT/grub.cfg"
-    printf 'grubaa64.efi,Fedora,,Fedora\r\n' > "$image_mnt/boot/efi/EFI/fedora/BOOTAA64.CSV"
-
-
-    echo "### Building monolithic GRUB EFI binary"
-    mkdir -p "$image_mnt/usr/lib/grub/arm64-efi/monolithic"
-
-    arch-chroot "$image_mnt" grub2-mkimage -O arm64-efi -o /usr/lib/grub/arm64-efi/monolithic/grubaa64.efi -p /EFI/fedora part_gpt fat ext2 normal linux search search_fs_uuid search_label configfile echo test probe regexp minicmd
-
-    cp "$image_mnt/usr/lib/grub/arm64-efi/monolithic/grubaa64.efi" "$GRUB_EFI_SOURCE"
 
     echo "### Enabling system services"
     # echo "### DEBUG: NetworkManager.service"
@@ -344,10 +294,8 @@ EOF
     arch-chroot $image_mnt ln -s ../run/systemd/resolve/stub-resolv.conf /etc/resolv.conf
 
     echo -e '\n### Unmounting rootfs subvolumes'
+    umount "$image_mnt/boot/efi"
     umount $image_mnt
-
-    echo -e '\n### Creating ESP image'
-    make_esp_image
 
     echo -e '\n### Creating boot image'
     make_boot_image
