@@ -29,10 +29,19 @@
 | ✅️ | ✅️ | ✅️ | ✅️ | ✅️ | ✅️ (~10w) | ✅️ | ✅️ | ✅️ | ✅️ | ✅️ | ✅️ | ✅️ | ✅️ | ✅️ | ⚠️ (sometimes) | ❌️ | ⚠️ (flaky) | ✅️ | ✅️ | ✅ |
 
 ### User Notes:
-- The root password is ```fedora```
-- The user password is ```147147```
-
 - Kernel updates are handled by dnf. The updated boot image will be flashed to the active slot
+  
+### Default Credentials:
+
+- **Admin (sudo) User**
+  - Username: `user`
+  - Password: `147147`
+
+- **Root**
+  - Username: `root`
+  - Password: `fedora`
+
+Change these default credentials after installation.
 
 ### Issues (all flavors):
 - Front camera doesnt work, back camera might
