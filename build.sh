@@ -8,8 +8,8 @@ image_mnt='mnt_image'
 date=$(date +%Y%m%d)
 de_name="${1:-}"
 mkosi_profile=""
-os_release='fedora-44'
-release_type='stable'
+os_release='fedora-45'
+release_type='beta-prerelease'
 
 get_de_name() {
     echo "### Flavor:"
