@@ -30,7 +30,7 @@ jobs:
 
     - name: Split release archives
       run: |
-        split -b 1200m images/pipa-fedora-45-gnome-20261013-beta-prerelease-2.zip "images/pipa-fedora-45-gnome-20261013-beta-prerelease-1.zip_part_"
+        split -b 1200m images/pipa-fedora-45-gnome-20261013-beta-prerelease-1.zip "images/pipa-fedora-45-gnome-20261013-beta-prerelease-1.zip_part_"
         split -b 1200m images/pipa-fedora-45-plasma-20261013-beta-prerelease-1.zip "images/pipa-fedora-45-plasma-20261013-beta-prerelease-1.zip_part_"
         split -b 1200m images/pipa-fedora-45-plasma-mobile-20261013-beta-prerelease-1.zip "images/pipa-fedora-45-plasma-mobile-20261013-beta-prerelease-1.zip_part_"
         
