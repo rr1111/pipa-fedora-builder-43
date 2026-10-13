@@ -22,11 +22,21 @@ jobs:
     - name: Build the Plasma image
       run: docker run --privileged -v "$(pwd)"/images:/build/images -v "/dev:/dev" pipa-fedora-builder-43 plasma
 
-    #- name: Build the Plasma Mobile image
-      #run: docker run --privileged -v "$(pwd)"/images:/build/images -v "/dev:/dev" pipa-fedora-builder-43 plasma-mobile
+    - name: Build the Plasma Mobile image
+      run: docker run --privileged -v "$(pwd)"/images:/build/images -v "/dev:/dev" pipa-fedora-builder-43 plasma-mobile
 
     - name: Build the Gnome image
       run: docker run --privileged -v "$(pwd)"/images:/build/images -v "/dev:/dev" pipa-fedora-builder-43 gnome
+
+    - name: Split release archives
+      run: |
+        split -b 1200m images/pipa-fedora-45-gnome-20261013-beta-prerelease-2.zip "images/pipa-fedora-45-gnome-20261013-beta-prerelease-2.zip_part_"
+        split -b 1200m images/pipa-fedora-45-plasma-20261013-beta-prerelease-1.zip "images/pipa-fedora-45-plasma-20261013-beta-prerelease-1.zip_part_"
+        split -b 1200m images/pipa-fedora-45-plasma-mobile-20261013-beta-prerelease-1.zip "images/pipa-fedora-45-plasma-mobile-20261013-beta-prerelease-1.zip_part_"
+        
+        rm images/pipa-fedora-45-gnome-*.zip
+        rm images/pipa-fedora-45-plasma-*.zip
+        rm images/pipa-fedora-45-plasma-mobile-*.zip
 
     - name: Get current date
       id: date
@@ -39,5 +49,7 @@ jobs:
         token: ${{ secrets.GITHUB_TOKEN }}
         tag_name: f44-${{ steps.date.outputs.date }}
         name: Fedora 44 ${{ steps.date.outputs.date }}
-        files: images/*.zip
+        files: |
+          images/*tty*.zip
+          images/*_part_*
         draft: true
